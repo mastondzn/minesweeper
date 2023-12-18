@@ -9,14 +9,14 @@ export const createGrid = ({ height, width, mines }: Preset): Cell[][] => {
                 .map(() => ({ type: 'empty', visible: false, flagged: false })),
         );
 
-    // populate bombs
-    let insertedBombs = 0;
-    while (insertedBombs < mines) {
+    // populate mine
+    let insertedMines = 0;
+    while (insertedMines < mines) {
         const y = Math.floor(Math.random() * height);
         const x = Math.floor(Math.random() * width);
         if (grid[y]![x]!.type === 'empty') {
             grid[y]![x] = { type: 'mine', visible: false, flagged: false };
-            insertedBombs++;
+            insertedMines++;
         }
     }
 
