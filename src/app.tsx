@@ -1,4 +1,4 @@
-import { IconBrandGithub, IconMoon, IconRefresh, IconSun } from '@tabler/icons-react';
+import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
 
 import { Button } from './components/button';
 import {
