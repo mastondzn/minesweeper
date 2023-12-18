@@ -58,6 +58,10 @@ export const useMinesweeper = create<MinesweeperState & MinesweeperActions>()(
                 if (!cell) throw new Error('Cell does not exist');
                 if (cell.visible) return;
                 cell.flagged = !cell.flagged;
+
+                if (determineWinCondition(state.grid)) {
+                    state.gameStatus = 'won';
+                }
             });
         },
     })),
