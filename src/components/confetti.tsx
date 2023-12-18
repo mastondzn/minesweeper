@@ -5,19 +5,19 @@ import { useMinesweeper } from '~/utils/hooks';
 
 export function Confetti() {
     const status = useMinesweeper((state) => state.gameStatus);
-    const [shouldConfetti, setShouldConfetti] = useState(false);
+    const [displayConfetti, setDisplayConfetti] = useState(false);
 
     useEffect(() => {
         if (status === 'won') {
-            setShouldConfetti(true);
+            setDisplayConfetti(true);
             const timeout = setTimeout(() => {
-                setShouldConfetti(false);
+                setDisplayConfetti(false);
             }, 4000);
             return () => {
                 clearTimeout(timeout);
             };
         }
-    }, [status, setShouldConfetti]);
+    }, [status]);
 
-    return shouldConfetti ? <ConfettiExplosion /> : null;
+    return displayConfetti ? <ConfettiExplosion /> : null;
 }

@@ -17,7 +17,7 @@ module.exports = defineConfig({
     ],
     ignorePatterns: ['dist'],
     parser: '@typescript-eslint/parser',
-    parserOptions: { project: './tsconfig.json' },
+    parserOptions: { project: ['./tsconfig.json', './tsconfig.node.json'] },
     settings: {
         'import/resolver': {
             typescript: {},

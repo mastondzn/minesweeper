@@ -20,12 +20,16 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedIndexedAccess": true,
+        "strictNullChecks": true,
+
+        "types": ["react", "react-dom"],
 
         "baseUrl": ".",
         "paths": {
             "~/*": ["./src/*"]
         }
     },
+
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
