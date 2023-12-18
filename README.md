@@ -1,30 +1,31 @@
-# React + TypeScript + Vite
+# Minesweeper
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Play at <https://minesweeper.maston.dev>
 
-Currently, two official plugins are available:
+## Main libs/stuff that was used to build this
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Vite
+- TailwindCSS
+- zustand
+- shadcn/ui
+- radix-ui
+- Tabler Icons
 
-## Expanding the ESLint configuration
+## TODOs
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [ ] Add luck removing option (e.g. use a flag on a 50/50 chance of removing a mine to force it on the other cell)
+- [ ] Add a way to always start a game on a empty block
 
-- Configure the top-level `parserOptions` property like this:
+## Development
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Prerequisites
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Node.js
+- pnpm
+
+### Setup
+
+- clone the repo and run `pnpm install`
+- run `pnpm dev`
+- develop
