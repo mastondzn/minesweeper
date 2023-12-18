@@ -46,16 +46,7 @@ function App() {
                         </Select>
                     </div>
                     <div>
-                        <Button
-                            className="flex justify-between gap-1"
-                            variant="secondary"
-                            onClick={() => {
-                                reset();
-                            }}
-                        >
-                            <IconRefresh className="" />
-                            <Timer />
-                        </Button>
+                        <Timer onClick={reset} />
                     </div>
                 </div>
 
