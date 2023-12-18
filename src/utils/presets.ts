@@ -4,7 +4,7 @@ export const presets = {
     beginner: {
         width: 9,
         height: 9,
-        mines: 10,
+        mines: 5,
     },
     intermediate: {
         width: 16,
