@@ -8,7 +8,7 @@ import { type Coordinates, type MinesweeperActions, type MinesweeperState } from
 
 export const useMinesweeper = create<MinesweeperState & MinesweeperActions>()(
     immer((set) => ({
-        presets: presets,
+        presets,
         preset: presets.beginner,
         grid: createGrid(presets.beginner),
         gameStatus: 'playing',
@@ -107,5 +107,5 @@ export const useTimer = () => {
         }
     }, [gameStatus, firstClick]);
 
-    return { milliseconds: milliseconds, gameStatus, firstClick };
+    return { milliseconds, gameStatus, firstClick };
 };

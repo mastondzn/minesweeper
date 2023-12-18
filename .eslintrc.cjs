@@ -57,6 +57,8 @@ module.exports = defineConfig({
             },
         ],
 
+        'object-shorthand': ['error', 'always'],
+
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
         '@typescript-eslint/consistent-type-imports': [
