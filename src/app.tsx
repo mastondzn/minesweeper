@@ -1,4 +1,4 @@
-import { IconRefresh } from '@tabler/icons-react';
+import { IconBrandGithub, IconMoon, IconRefresh, IconSun } from '@tabler/icons-react';
 
 import { Button } from './components/button';
 import {
@@ -10,12 +10,14 @@ import {
     SelectValue,
 } from './components/select';
 import { Table, TableBody, TableCell, TableRow } from './components/table';
+import { useTheme } from './components/theme-provider';
 import { Timer } from './components/timer';
 import { useMinesweeper, useMinesweeperCell } from './utils/hooks';
 import { type Coordinates } from './utils/types';
 
 function App() {
     const { grid, presets, choosePreset, reset } = useMinesweeper();
+    const { toggleTheme, theme } = useTheme();
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
@@ -69,13 +71,28 @@ function App() {
                     </TableBody>
                 </Table>
 
-                <div className="flex flex-row justify-between pb-4">
-                    <div></div>
-                    <div>
+                <div className="flex flex-row-reverse gap-2 pt-2">
+                    <Button
+                        variant="outline"
+                        className="h-fit w-fit rounded-full border-2 p-3"
+                        onClick={toggleTheme}
+                    >
                         {
-                            //links
+                            {
+                                light: <IconSun className="h-6 w-6" />,
+                                dark: <IconMoon className="h-6 w-6" />,
+                            }[theme]
                         }
-                    </div>
+                    </Button>
+                    <Button
+                        variant="outline"
+                        className="h-fit w-fit rounded-full border-2 p-3"
+                        asChild
+                    >
+                        <a href="https://github.com/mastondzn/minesweeper" target="_blank">
+                            <IconBrandGithub className="h-6 w-6" />
+                        </a>
+                    </Button>
                 </div>
             </div>
         </div>
@@ -105,7 +122,7 @@ function GameCell({ coords }: { coords: Coordinates }) {
     }
 
     if (cell.type === 'empty') {
-        return <TableCell {...props} className="bg-muted/60" />;
+        return <TableCell {...props} className="bg-muted/100 dark:bg-muted/60" />;
     }
 
     if (cell.type === 'number') {
@@ -113,7 +130,10 @@ function GameCell({ coords }: { coords: Coordinates }) {
     }
 
     return (
-        <TableCell {...props} className="select-none bg-red-800 hover:bg-red-950">
+        <TableCell
+            {...props}
+            className="select-none bg-red-400 hover:bg-red-600 dark:bg-red-800 dark:hover:bg-red-900"
+        >
             💣
         </TableCell>
     );
