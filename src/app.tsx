@@ -1,24 +1,121 @@
-import { useState } from 'react';
+import { IconRefresh } from '@tabler/icons-react';
+
+import { Button } from './components/button';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from './components/select';
+import { Table, TableBody, TableCell, TableRow } from './components/table';
+import { Timer } from './components/timer';
+import { useMinesweeper, useMinesweeperCell } from './utils/hooks';
+import { type Coordinates } from './utils/types';
 
 function App() {
-    const [count, setCount] = useState(0);
+    const { grid, presets, choosePreset, reset } = useMinesweeper();
 
     return (
-        <>
-            <h1>Vite + React</h1>
+        <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
             <div>
-                <button
-                    onClick={() => {
-                        setCount((count) => count + 1);
-                    }}
-                >
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
+                <div className="flex flex-row items-center justify-between pb-4">
+                    <div>
+                        <Select
+                            onValueChange={(value) => {
+                                choosePreset(presets[value as keyof typeof presets]);
+                            }}
+                        >
+                            <SelectTrigger className="w-[270px]">
+                                <SelectValue placeholder="Change preset" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {Object.entries(presets).map(([name, preset]) => (
+                                        <SelectItem key={name} value={name}>
+                                            {`${name[0]?.toUpperCase()}${name.slice(1)} (${
+                                                preset.width
+                                            }x${preset.height}, ${preset.mines} mines)`}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Button
+                            className="flex justify-between gap-1"
+                            variant="secondary"
+                            onClick={() => {
+                                reset();
+                            }}
+                        >
+                            <IconRefresh className="" />
+                            <Timer />
+                        </Button>
+                    </div>
+                </div>
+
+                <Table>
+                    <TableBody>
+                        {grid.map((row, y) => (
+                            <TableRow key={y}>
+                                {row.map((_cell, x) => (
+                                    <GameCell key={`${x},${y}`} coords={{ x, y }} />
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+
+                <div className="flex flex-row justify-between pb-4">
+                    <div></div>
+                    <div>
+                        {
+                            //links
+                        }
+                    </div>
+                </div>
             </div>
-        </>
+        </div>
+    );
+}
+
+function GameCell({ coords }: { coords: Coordinates }) {
+    const { cell, click, flag, gameStatus } = useMinesweeperCell(coords);
+
+    const props = {
+        onClick: () => {
+            click();
+        },
+        onContextMenu: (e: React.MouseEvent<HTMLTableCellElement>) => {
+            e.preventDefault();
+            flag();
+        },
+        className: 'select-none',
+    } satisfies React.TdHTMLAttributes<HTMLTableCellElement>;
+
+    if (cell.flagged && gameStatus !== 'lost') {
+        return <TableCell {...props}>🚩</TableCell>;
+    }
+
+    if (!cell.visible && gameStatus !== 'lost') {
+        return <TableCell {...props} />;
+    }
+
+    if (cell.type === 'empty') {
+        return <TableCell {...props} className="bg-muted/60" />;
+    }
+
+    if (cell.type === 'number') {
+        return <TableCell {...props}>{cell.value}</TableCell>;
+    }
+
+    return (
+        <TableCell {...props} className="select-none bg-red-800 hover:bg-red-950">
+            💣
+        </TableCell>
     );
 }
 

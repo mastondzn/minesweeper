@@ -9,6 +9,7 @@ module.exports = defineConfig({
         'plugin:unicorn/recommended',
         'plugin:import/recommended',
         'plugin:import/typescript',
+        'plugin:tailwindcss/recommended',
         'plugin:@typescript-eslint/recommended-type-checked',
         'plugin:@typescript-eslint/strict-type-checked',
         'plugin:@typescript-eslint/stylistic-type-checked',
@@ -17,7 +18,14 @@ module.exports = defineConfig({
     ignorePatterns: ['dist'],
     parser: '@typescript-eslint/parser',
     parserOptions: { project: './tsconfig.json' },
-    settings: { 'import/resolver': { typescript: {} } },
+    settings: {
+        'import/resolver': {
+            typescript: {},
+        },
+        tailwindcss: {
+            callees: ['cn'],
+        },
+    },
     plugins: ['react-refresh', 'simple-import-sort'],
     rules: {
         'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
@@ -60,5 +68,9 @@ module.exports = defineConfig({
             },
         ],
         '@typescript-eslint/no-non-null-assertion': 'warn',
+
+        'unicorn/no-null': 'off',
+        'unicorn/prevent-abbreviations': 'off',
+        'unicorn/no-new-array': 'off',
     },
 });
