@@ -53,6 +53,8 @@ export const updateNeighbors = (grid: Cell[][], { x, y }: Coordinates) => {
     const height = grid.length;
     const width = grid[0]!.length;
 
+    const cell = grid[y]![x]!;
+
     for (const dy of [-1, 0, 1]) {
         for (const dx of [-1, 0, 1]) {
             if (dx === 0 && dy === 0) continue;
@@ -61,14 +63,18 @@ export const updateNeighbors = (grid: Cell[][], { x, y }: Coordinates) => {
             const newX = x + dx;
 
             const isInBounds = newY < height && newX < width && newY >= 0 && newX >= 0;
-            const isEmpty = grid[y]?.[x]?.type === 'empty';
-            const isNotAMine = grid[newY]?.[newX]?.type !== 'mine';
-            const isNotVisible = grid[newY]?.[newX]?.visible === false;
-            const isNotFlagged = grid[newY]?.[newX]?.flagged === false;
+            if (!isInBounds) continue;
 
-            if (isInBounds && isEmpty && isNotAMine && isNotVisible && isNotFlagged) {
-                grid[newY]![newX]!.visible = true;
-                grid[newY]![newX]!.flagged = false;
+            const currentCell = grid[newY]![newX]!;
+
+            const isEmpty = cell.type === 'empty';
+            const isNotAMine = currentCell.type !== 'mine';
+            const isNotVisible = !currentCell.visible;
+            const isNotFlagged = !currentCell.flagged;
+
+            if (isEmpty && isNotAMine && isNotVisible && isNotFlagged) {
+                currentCell.visible = true;
+                currentCell.flagged = false;
                 updateNeighbors(grid, { y: newY, x: newX });
             }
         }

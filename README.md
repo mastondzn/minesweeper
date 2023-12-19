@@ -16,6 +16,7 @@ Play at <https://minesweeper.maston.dev>
 
 - [ ] Add luck removing option (e.g. use a flag on a 50/50 chance of removing a mine to force it on the other cell)
 - [ ] Add a way to always start a game on a empty block
+- [ ] Fix performance issues, passing the Proxy created by immer to the updateNeighbors function seems to be pretty bad
 
 ## Development
 

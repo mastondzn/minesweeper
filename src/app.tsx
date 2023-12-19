@@ -1,7 +1,7 @@
 import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
+import ConfettiExplosion from 'react-confetti-explosion';
 
 import { Button } from './components/button';
-import { Confetti } from './components/confetti';
 import {
     Select,
     SelectContent,
@@ -17,12 +17,12 @@ import { useMinesweeper, useMinesweeperCell } from './utils/hooks';
 import { type Coordinates } from './utils/types';
 
 function App() {
-    const { grid, presets, choosePreset, reset } = useMinesweeper();
+    const { grid, presets, choosePreset, reset, gameStatus } = useMinesweeper();
     const { toggleTheme, theme } = useTheme();
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
-            <Confetti />
+            {gameStatus === 'won' && <ConfettiExplosion />}
             <div>
                 <div className="flex flex-row items-center justify-between pb-4">
                     <div>
@@ -123,10 +123,7 @@ function GameCell({ coords }: { coords: Coordinates }) {
     }
 
     return (
-        <TableCell
-            {...props}
-            className="select-none bg-red-400 hover:bg-red-600 dark:bg-red-800 dark:hover:bg-red-900"
-        >
+        <TableCell {...props} className="select-none bg-destructive">
             💣
         </TableCell>
     );
