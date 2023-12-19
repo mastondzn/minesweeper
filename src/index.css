@@ -75,6 +75,11 @@
     }
 }
 
+@font-face {
+    font-family: 'Inter';
+    src: url('https://fonts.googleapis.com/css?family=Inter') format('woff2');
+}
+
 body {
     font-family: 'Inter', sans-serif;
 }
