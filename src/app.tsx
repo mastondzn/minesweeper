@@ -30,7 +30,7 @@ function App() {
     const { toggleTheme, theme } = useTheme();
 
     return (
-        <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
+        <div className="m-4 mx-auto flex min-h-screen flex-col items-center justify-center">
             {gameStatus === 'won' && <ConfettiExplosion />}
             <div className="mx-auto flex flex-col items-center justify-center gap-4">
                 <div className="flex flex-row items-center gap-4">
