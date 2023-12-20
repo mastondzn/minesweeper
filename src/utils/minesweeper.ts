@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 import { createGrid, determineWinCondition, updateNeighbors } from './helpers';
-import { presets } from './presets';
+import { type PresetName, presets } from './presets';
 import { storage } from './storage';
 import { type Cell, type Coordinates, type Minesweeper, type MinesweeperState } from './types';
 
@@ -16,7 +16,7 @@ export const useMinesweeper = create<Minesweeper>()(
         gameStatus: 'playing',
         startedAt: null,
         endedAt: null,
-        choosePreset: (preset: keyof typeof presets) => {
+        choosePreset: (preset: PresetName) => {
             set((state: MinesweeperState) => {
                 storage.set('settings', { preset });
                 state.settings.preset = preset;

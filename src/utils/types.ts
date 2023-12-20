@@ -1,4 +1,4 @@
-import { type presets } from './presets';
+import { type PresetName } from './presets';
 
 export interface Preset {
     width: number;
@@ -21,7 +21,7 @@ export type Cell = (
 };
 
 export interface Settings {
-    preset: keyof typeof presets;
+    preset: PresetName;
     startDirective: 'none' | 'empty' | 'numberOrEmpty';
 }
 
@@ -44,7 +44,7 @@ export type MinesweeperState = {
 export interface MinesweeperActions {
     click: ({ x, y }: Coordinates) => void;
     flag: ({ x, y }: Coordinates) => void;
-    choosePreset: (preset: keyof typeof presets) => void;
+    choosePreset: (preset: PresetName) => void;
     reset: () => void;
 }
 

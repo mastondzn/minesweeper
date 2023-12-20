@@ -3,10 +3,11 @@ import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import * as React from 'react';
 
 import { cn } from '~/utils/classnames';
+import { humanizedPresets, type PresetName, presets } from '~/utils/presets';
 
-// const Select = SelectPrimitive.Root;
-// const SelectGroup = SelectPrimitive.Group;
-// const SelectValue = SelectPrimitive.Value;
+export const Select = SelectPrimitive.Root;
+export const SelectGroup = SelectPrimitive.Group;
+export const SelectValue = SelectPrimitive.Value;
 
 export const SelectTrigger = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Trigger>,
@@ -134,3 +135,27 @@ export const SelectSeparator = React.forwardRef<
     />
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export const PresetPicker = (props: {
+    onValueChange: (value: PresetName) => void;
+    defaultValue: PresetName;
+}) => {
+    return (
+        <Select {...props}>
+            <SelectTrigger className="w-[270px]">
+                <SelectValue placeholder="Change preset" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectGroup>
+                    {Object.entries(presets).map(([name]) => {
+                        return (
+                            <SelectItem key={name} value={name}>
+                                {humanizedPresets[name]}
+                            </SelectItem>
+                        );
+                    })}
+                </SelectGroup>
+            </SelectContent>
+        </Select>
+    );
+};

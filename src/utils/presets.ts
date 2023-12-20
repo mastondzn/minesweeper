@@ -22,3 +22,13 @@ export const presets = {
         mines: 130,
     },
 } satisfies Record<string, Preset>;
+
+export type PresetName = keyof typeof presets;
+
+export const humanizedPresets = Object.fromEntries(
+    Object.entries(presets).map(([key, value]) => {
+        const capitalized = key[0]!.toUpperCase() + key.slice(1);
+
+        return [key, `${capitalized} (${value.width}x${value.height}, ${value.mines} mines)`];
+    }),
+);

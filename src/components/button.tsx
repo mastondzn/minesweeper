@@ -1,7 +1,9 @@
 import { Slot } from '@radix-ui/react-slot';
+import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+import { useTheme } from './theme-provider';
 import { cn } from '~/utils/classnames';
 
 export const buttonVariants = cva(
@@ -50,3 +52,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
 );
 Button.displayName = 'Button';
+
+export const BottomButtons = () => {
+    const { toggleTheme, theme } = useTheme();
+
+    return (
+        <div className="flex flex-row-reverse gap-2">
+            <Button
+                variant="outline"
+                className="h-fit w-fit rounded-full border-2 p-3"
+                onClick={toggleTheme}
+            >
+                {theme === 'dark' ? (
+                    <IconMoon className="h-6 w-6" />
+                ) : (
+                    <IconSun className="h-6 w-6" />
+                )}
+            </Button>
+            <Button variant="outline" className="h-fit w-fit rounded-full border-2 p-3" asChild>
+                <a href="https://github.com/mastondzn/minesweeper" target="_blank">
+                    <IconBrandGithub className="h-6 w-6" />
+                </a>
+            </Button>
+        </div>
+    );
+};

@@ -1,36 +1,25 @@
-import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
 import ConfettiExplosion from 'react-confetti-explosion';
 
-import { Button } from './components/button';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from './components/select';
+import { BottomButtons } from './components/button';
+import { PresetPicker } from './components/select';
 import { Table, TableBody, TableCell, TableRow } from './components/table';
-import { useTheme } from './components/theme-provider';
 import { Timer } from './components/timer';
 import { cn } from './utils/classnames';
 import { digitColors } from './utils/colors';
 import { useKeyPress } from './utils/hooks';
 import { useMinesweeper, useMinesweeperCell } from './utils/minesweeper';
-import { presets } from './utils/presets';
 import { type Coordinates } from './utils/types';
 
 function App() {
     const {
-        grid,
+        grid, //
         choosePreset,
         reset,
-        gameStatus, //
+        gameStatus,
         startedAt,
         endedAt,
         settings,
     } = useMinesweeper();
-    const { toggleTheme, theme } = useTheme();
     useKeyPress('r', { onDown: reset });
 
     return (
@@ -39,30 +28,7 @@ function App() {
             <div className="m-4 mx-auto flex flex-col items-center justify-center gap-4">
                 <div className="flex flex-row items-center gap-4">
                     <Timer onClick={reset} {...{ gameStatus, startedAt, endedAt }} />
-
-                    <Select
-                        defaultValue={settings.preset}
-                        onValueChange={(value) => {
-                            choosePreset(value as keyof typeof presets);
-                        }}
-                    >
-                        <SelectTrigger className="w-[270px]">
-                            <SelectValue placeholder="Change preset" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {Object.entries(presets).map(([name, preset]) => {
-                                    return (
-                                        <SelectItem key={name} value={name}>
-                                            {`${name[0]?.toUpperCase()}${name.slice(1)} (${
-                                                preset.width
-                                            }x${preset.height}, ${preset.mines} mines)`}
-                                        </SelectItem>
-                                    );
-                                })}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                    <PresetPicker defaultValue={settings.preset} onValueChange={choosePreset} />
                 </div>
 
                 <Table>
@@ -76,30 +42,7 @@ function App() {
                         ))}
                     </TableBody>
                 </Table>
-
-                <div className="flex flex-row-reverse gap-2">
-                    <Button
-                        variant="outline"
-                        className="h-fit w-fit rounded-full border-2 p-3"
-                        onClick={toggleTheme}
-                    >
-                        {
-                            {
-                                light: <IconSun className="h-6 w-6" />,
-                                dark: <IconMoon className="h-6 w-6" />,
-                            }[theme]
-                        }
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="h-fit w-fit rounded-full border-2 p-3"
-                        asChild
-                    >
-                        <a href="https://github.com/mastondzn/minesweeper" target="_blank">
-                            <IconBrandGithub className="h-6 w-6" />
-                        </a>
-                    </Button>
-                </div>
+                <BottomButtons />
             </div>
         </div>
     );
