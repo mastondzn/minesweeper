@@ -20,17 +20,38 @@ export type Cell = (
     visible: boolean;
 };
 
-export interface MinesweeperState {
-    presets: typeof presets;
-    preset: Preset;
-    grid: Cell[][];
-    firstClick: boolean;
-    gameStatus: 'won' | 'lost' | 'playing';
+export interface Settings {
+    preset: keyof typeof presets;
+    startDirective: 'none' | 'empty' | 'numberOrEmpty';
 }
+
+export type MinesweeperState = {
+    settings: Settings;
+    grid: Cell[][];
+} & (
+    | {
+          startedAt: Date;
+          endedAt: Date;
+          gameStatus: 'won' | 'lost';
+      }
+    | {
+          startedAt: null | Date;
+          endedAt: null;
+          gameStatus: 'playing';
+      }
+);
 
 export interface MinesweeperActions {
     click: ({ x, y }: Coordinates) => void;
     flag: ({ x, y }: Coordinates) => void;
+    choosePreset: (preset: keyof typeof presets) => void;
     reset: () => void;
-    choosePreset: (preset: Preset) => void;
 }
+
+export type Minesweeper = MinesweeperState & MinesweeperActions;
+
+export type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;

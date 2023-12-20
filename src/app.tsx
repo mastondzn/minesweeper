@@ -13,43 +13,52 @@ import {
 import { Table, TableBody, TableCell, TableRow } from './components/table';
 import { useTheme } from './components/theme-provider';
 import { Timer } from './components/timer';
-import { useMinesweeper, useMinesweeperCell } from './utils/hooks';
+import { useMinesweeper, useMinesweeperCell } from './utils/minesweeper';
+import { presets } from './utils/presets';
 import { type Coordinates } from './utils/types';
 
 function App() {
-    const { grid, presets, choosePreset, reset, gameStatus } = useMinesweeper();
+    const {
+        grid,
+        choosePreset,
+        reset,
+        gameStatus, //
+        startedAt,
+        endedAt,
+        settings,
+    } = useMinesweeper();
     const { toggleTheme, theme } = useTheme();
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
             {gameStatus === 'won' && <ConfettiExplosion />}
-            <div>
-                <div className="flex flex-row items-center justify-between pb-4">
-                    <div>
-                        <Select
-                            onValueChange={(value) => {
-                                choosePreset(presets[value as keyof typeof presets]);
-                            }}
-                        >
-                            <SelectTrigger className="w-[270px]">
-                                <SelectValue placeholder="Change preset" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    {Object.entries(presets).map(([name, preset]) => (
+            <div className="mx-auto flex flex-col items-center justify-center gap-4">
+                <div className="flex flex-row items-center gap-4">
+                    <Select
+                        defaultValue={settings.preset}
+                        onValueChange={(value) => {
+                            choosePreset(value as keyof typeof presets);
+                        }}
+                    >
+                        <SelectTrigger className="w-[270px]">
+                            <SelectValue placeholder="Change preset" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {Object.entries(presets).map(([name, preset]) => {
+                                    return (
                                         <SelectItem key={name} value={name}>
                                             {`${name[0]?.toUpperCase()}${name.slice(1)} (${
                                                 preset.width
                                             }x${preset.height}, ${preset.mines} mines)`}
                                         </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div>
-                        <Timer onClick={reset} />
-                    </div>
+                                    );
+                                })}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Timer onClick={reset} {...{ gameStatus, startedAt, endedAt }} />
                 </div>
 
                 <Table>
@@ -64,7 +73,7 @@ function App() {
                     </TableBody>
                 </Table>
 
-                <div className="flex flex-row-reverse gap-2 pt-2">
+                <div className="flex flex-row-reverse gap-2">
                     <Button
                         variant="outline"
                         className="h-fit w-fit rounded-full border-2 p-3"

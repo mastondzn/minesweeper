@@ -16,4 +16,9 @@ export const presets = {
         height: 16,
         mines: 99,
     },
+    evil: {
+        width: 30,
+        height: 20,
+        mines: 130,
+    },
 } satisfies Record<string, Preset>;

@@ -33,7 +33,7 @@ const TableCell = React.forwardRef<
     <td
         ref={ref}
         className={cn(
-            'h-12 w-12 border text-center align-middle text-lg font-extrabold transition-colors hover:bg-muted/30',
+            'h-10 min-h-[40px] w-10 min-w-[40px] border text-center align-middle text-lg font-extrabold transition-colors hover:bg-muted/30',
             className,
         )}
         {...props}

@@ -1,15 +1,40 @@
 import { IconRefresh } from '@tabler/icons-react';
 import ms from 'pretty-ms';
+import { useEffect, useState } from 'react';
 
 import { Button } from './button';
 import { cn } from '~/utils/classnames';
-import { useTimer } from '~/utils/hooks';
 
-export function Timer({ onClick }: { onClick: () => void }) {
-    const { milliseconds, gameStatus } = useTimer();
+export function Timer({
+    onClick,
+    startedAt,
+    endedAt,
+    gameStatus,
+}: {
+    onClick: () => void;
+    startedAt: Date | null;
+    endedAt: Date | null;
+    gameStatus: 'won' | 'lost' | 'playing';
+}) {
+    const [milliseconds, setMilliseconds] = useState(0);
+
+    useEffect(() => {
+        if (startedAt && endedAt) {
+            setMilliseconds(endedAt.getTime() - startedAt.getTime());
+        } else if (startedAt) {
+            const interval = setInterval(() => {
+                setMilliseconds(Date.now() - startedAt.getTime());
+            }, 100);
+            return () => {
+                clearInterval(interval);
+            };
+        } else {
+            setMilliseconds(0);
+        }
+    }, [startedAt, endedAt, gameStatus]);
 
     return (
-        <Button className="flex justify-between gap-1" variant="secondary" onClick={onClick}>
+        <Button className="flex justify-between gap-2 p-3" variant="secondary" onClick={onClick}>
             <IconRefresh
                 className={cn(
                     gameStatus === 'lost' && 'text-red-400',
