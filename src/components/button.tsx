@@ -57,7 +57,12 @@ export const BottomButtons = () => {
     const { toggleTheme, theme } = useTheme();
 
     return (
-        <div className="flex flex-row-reverse gap-2">
+        <div className="flex flex-row gap-2">
+            <Button variant="outline" className="h-fit w-fit rounded-full border-2 p-3" asChild>
+                <a href="https://github.com/mastondzn/minesweeper" target="_blank">
+                    <IconBrandGithub className="h-6 w-6" />
+                </a>
+            </Button>
             <Button
                 variant="outline"
                 className="h-fit w-fit rounded-full border-2 p-3"
@@ -68,11 +73,6 @@ export const BottomButtons = () => {
                 ) : (
                     <IconSun className="h-6 w-6" />
                 )}
-            </Button>
-            <Button variant="outline" className="h-fit w-fit rounded-full border-2 p-3" asChild>
-                <a href="https://github.com/mastondzn/minesweeper" target="_blank">
-                    <IconBrandGithub className="h-6 w-6" />
-                </a>
             </Button>
         </div>
     );

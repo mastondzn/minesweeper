@@ -70,6 +70,10 @@ module.exports = defineConfig({
             },
         ],
         '@typescript-eslint/no-non-null-assertion': 'warn',
+        '@typescript-eslint/no-confusing-void-expression': [
+            'error',
+            { ignoreArrowShorthand: true },
+        ],
 
         'unicorn/no-null': 'off',
         'unicorn/prevent-abbreviations': 'off',

@@ -33,23 +33,19 @@ export function Timer({
         }
     }, [startedAt, endedAt, gameStatus]);
 
+    const className = cn(
+        gameStatus === 'lost' && 'text-red-500 dark:text-red-400',
+        gameStatus === 'won' && 'text-green-500 dark:text-green-400',
+    );
+
     return (
-        <Button className="flex justify-between gap-2 p-3" variant="secondary" onClick={onClick}>
-            <IconRefresh
-                className={cn(
-                    gameStatus === 'lost' && 'text-red-400',
-                    gameStatus === 'won' && 'text-green-700',
-                )}
-            />
-            <div
-                className={cn(
-                    'text-lg tabular-nums',
-                    gameStatus === 'lost' && 'text-red-400',
-                    gameStatus === 'won' && 'text-green-700',
-                )}
-            >
-                {customMs(milliseconds)}
-            </div>
+        <Button
+            className="flex justify-between gap-2 bg-muted p-3"
+            variant="secondary"
+            onClick={onClick}
+        >
+            <IconRefresh className={className} />
+            <div className={cn(className, 'text-lg tabular-nums')}>{customMs(milliseconds)}</div>
         </Button>
     );
 }
