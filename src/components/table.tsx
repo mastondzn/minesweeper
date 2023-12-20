@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { cn } from '~/utils/classnames';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
+export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
     ({ className, ...props }, ref) => (
         <div className="relative overflow-auto">
             <table
@@ -17,16 +17,17 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
     ),
 );
 
-const TableBody = React.forwardRef<
+export const TableBody = React.forwardRef<
     HTMLTableSectionElement,
     React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => <tbody ref={ref} className={className} {...props} />);
 
-const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
-    ({ className, ...props }, ref) => <tr ref={ref} className={className} {...props} />,
-);
+export const TableRow = React.forwardRef<
+    HTMLTableRowElement,
+    React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => <tr ref={ref} className={className} {...props} />);
 
-const TableCell = React.forwardRef<
+export const TableCell = React.forwardRef<
     HTMLTableCellElement,
     React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
@@ -39,5 +40,3 @@ const TableCell = React.forwardRef<
         {...props}
     />
 ));
-
-export { Table, TableBody, TableRow, TableCell };
