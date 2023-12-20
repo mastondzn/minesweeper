@@ -4,32 +4,21 @@ import { z } from 'zod';
 
 import { type DeepPartial, type Settings } from './types';
 
-const defineMeta = <
-    TSchema extends z.ZodType,
-    TDefinable extends {
+const defineMeta =
+    <TShape>() =>
+    <TSchema extends z.ZodType<TShape, z.ZodTypeDef, unknown>>(meta: {
         schema: TSchema;
-        default?: z.infer<TSchema>;
-    },
->(
-    shape: TDefinable,
-) => {
-    return shape;
-};
-
-const schemaForType =
-    <T>() =>
-    <S extends z.ZodType<T, z.ZodTypeDef, unknown>>(arg: S) => {
-        return arg;
+        default: z.infer<TSchema>;
+    }) => {
+        return meta;
     };
 
 const storageMeta = {
-    settings: defineMeta({
-        schema: schemaForType<Settings>()(
-            z.object({
-                preset: z.enum(['beginner', 'intermediate', 'expert', 'evil']),
-                startDirective: z.enum(['none', 'empty', 'numberOrEmpty']),
-            }),
-        ),
+    settings: defineMeta<Settings>()({
+        schema: z.object({
+            preset: z.enum(['beginner', 'intermediate', 'expert', 'evil']),
+            startDirective: z.enum(['none', 'empty', 'numberOrEmpty']),
+        }),
         default: {
             preset: 'beginner',
             startDirective: 'empty',
@@ -37,43 +26,17 @@ const storageMeta = {
     }),
 };
 
-type KeysWithDefault = {
-    [K in keyof typeof storageMeta]: (typeof storageMeta)[K] extends {
-        default: Record<string, unknown>;
-    }
-        ? K
-        : never;
-}[keyof typeof storageMeta];
-
-type KeysWithoutDefault = {
-    [K in keyof typeof storageMeta]: (typeof storageMeta)[K] extends {
-        default: Record<string, unknown>;
-    }
-        ? never
-        : K;
-}[keyof typeof storageMeta];
-
-function get<
-    TKey extends KeysWithDefault,
-    TShape extends z.infer<(typeof storageMeta)[TKey]['schema']>,
->(key: TKey): TShape;
-function get<
-    TKey extends KeysWithoutDefault,
-    TShape extends z.infer<(typeof storageMeta)[TKey]['schema']>,
->(key: TKey): TShape | null;
 function get<
     TKey extends keyof typeof storageMeta,
     TShape extends z.infer<(typeof storageMeta)[TKey]['schema']>,
->(key: TKey): TShape | null {
+>(key: TKey): TShape {
     // TODO: handle this better, if we change the schema and the user still has old schema this will fail
     const raw = localStorage.getItem(key);
     const meta = storageMeta[key];
 
-    if (!raw && 'default' in meta) {
+    if (!raw) {
         // @ts-expect-error safe
         return meta.default;
-    } else if (!raw) {
-        return null;
     }
 
     let superjsond: unknown;

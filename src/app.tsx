@@ -13,6 +13,9 @@ import {
 import { Table, TableBody, TableCell, TableRow } from './components/table';
 import { useTheme } from './components/theme-provider';
 import { Timer } from './components/timer';
+import { cn } from './utils/classnames';
+import { digitColors } from './utils/colors';
+import { useKeyPress } from './utils/hooks';
 import { useMinesweeper, useMinesweeperCell } from './utils/minesweeper';
 import { presets } from './utils/presets';
 import { type Coordinates } from './utils/types';
@@ -28,12 +31,15 @@ function App() {
         settings,
     } = useMinesweeper();
     const { toggleTheme, theme } = useTheme();
+    useKeyPress('r', { onDown: reset });
 
     return (
-        <div className="m-4 mx-auto flex min-h-screen flex-col items-center justify-center">
+        <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
             {gameStatus === 'won' && <ConfettiExplosion />}
-            <div className="mx-auto flex flex-col items-center justify-center gap-4">
+            <div className="m-4 mx-auto flex flex-col items-center justify-center gap-4">
                 <div className="flex flex-row items-center gap-4">
+                    <Timer onClick={reset} {...{ gameStatus, startedAt, endedAt }} />
+
                     <Select
                         defaultValue={settings.preset}
                         onValueChange={(value) => {
@@ -57,8 +63,6 @@ function App() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-
-                    <Timer onClick={reset} {...{ gameStatus, startedAt, endedAt }} />
                 </div>
 
                 <Table>
@@ -128,7 +132,11 @@ function GameCell({ coords }: { coords: Coordinates }) {
     }
 
     if (cell.type === 'number') {
-        return <TableCell {...props}>{cell.value}</TableCell>;
+        return (
+            <TableCell {...props} className={cn(digitColors[cell.value])}>
+                {cell.value}
+            </TableCell>
+        );
     }
 
     return (
