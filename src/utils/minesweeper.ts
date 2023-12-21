@@ -34,9 +34,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
     },
     click: ({ x, y }) => {
         set((state) => {
-            return produce(state, (draft) => {
-                if (draft.gameStatus !== 'playing') return;
+            if (state.gameStatus !== 'playing') return state;
 
+            return produce(state, (draft) => {
                 let cell = draft.grid[y]?.[x];
                 if (!cell || cell.flagged) return;
 
@@ -83,9 +83,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
     },
     flag: ({ x, y }) => {
         set((state) => {
-            return produce(state, (draft) => {
-                if (!draft.startedAt) return;
+            if (!state.startedAt) return state;
 
+            return produce(state, (draft) => {
                 const cell = draft.grid[y]?.[x];
 
                 // TODO: we can make the game not be based on luck here in the future
