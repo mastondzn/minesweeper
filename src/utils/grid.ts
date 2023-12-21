@@ -8,10 +8,18 @@ export class Grid<T> {
     public readonly height: number;
     [immerable] = true;
 
-    constructor({ fill, width, height }: { fill: () => T; width: number; height: number }) {
+    constructor({
+        fill,
+        width,
+        height,
+    }: {
+        fill: ({ x, y }: Coordinates) => T;
+        width: number;
+        height: number;
+    }) {
         this.table = new Array(height)
             .fill(null)
-            .map(() => new Array(width).fill(null).map(() => fill()));
+            .map((_, y) => new Array(width).fill(null).map((_, x) => fill({ x, y })));
 
         this.width = width;
         this.height = height;
@@ -39,9 +47,11 @@ export class Grid<T> {
                 if (!this.isInBounds(neighbor)) continue;
 
                 let place = '';
+
                 if (dy === -1) place += 't';
                 if (dy === 0) place += 'm';
                 if (dy === 1) place += 'b';
+
                 if (dx === -1) place += 'l';
                 if (dx === 0) place += 'm';
                 if (dx === 1) place += 'r';
@@ -69,4 +79,20 @@ export class Grid<T> {
     public isInBounds({ x, y }: Coordinates): boolean {
         return y < this.height && x < this.width && y >= 0 && x >= 0;
     }
+
+    // subgrid({ from, to }: { from: Coordinates; to: Coordinates }): Grid<T> {
+    //     const width = to.x - from.x + 1;
+    //     const height = to.y - from.y + 1;
+
+    //     return new Grid({
+    //         width,
+    //         height,
+    //         fill: (coords) => {
+    //             return this.at({
+    //                 x: coords.x + from.x,
+    //                 y: coords.y + from.y,
+    //             });
+    //         },
+    //     });
+    // }
 }
