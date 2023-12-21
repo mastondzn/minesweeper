@@ -4,27 +4,26 @@ import { create } from 'zustand';
 import { createGrid, determineWinCondition, updateNeighbors } from './helpers';
 import { type PresetName, presets } from './presets';
 import { storage } from './storage';
-import { type Cell, type Minesweeper, type MinesweeperState } from './types';
+import { type Cell, type Minesweeper } from './types';
 
 const settings = storage.get('settings');
 
-const resetGame = (draft: Draft<MinesweeperState>) => {
+const resetGame = (draft: Draft<Minesweeper>) => {
     draft.grid = createGrid(presets[draft.settings.preset]);
     draft.gameStatus = 'playing';
     draft.startedAt = null;
     draft.endedAt = null;
 };
 
-// ts server donking up here for some reason
 export const useMinesweeper = create<Minesweeper>()((set) => ({
     settings,
     grid: createGrid(presets[settings.preset]),
     gameStatus: 'playing',
     startedAt: null,
     endedAt: null,
-    reset: () => set((state: MinesweeperState) => produce(state, resetGame)),
+    reset: () => set((state) => produce(state, resetGame)),
     choosePreset: (preset: PresetName) => {
-        set((state: MinesweeperState) => {
+        set((state) => {
             storage.set('settings', { preset });
 
             return produce(state, (draft) => {
@@ -34,7 +33,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
         });
     },
     click: ({ x, y }) => {
-        set((state: MinesweeperState) => {
+        set((state) => {
             return produce(state, (draft) => {
                 if (draft.gameStatus !== 'playing') return;
 
@@ -90,7 +89,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
         });
     },
     flag: ({ x, y }) => {
-        set((state: MinesweeperState) => {
+        set((state) => {
             return produce(state, (draft) => {
                 if (draft.gameStatus !== 'playing') return;
 
