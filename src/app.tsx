@@ -36,7 +36,7 @@ function App() {
 
                 <Table>
                     <TableBody>
-                        {grid.map((row, y) => (
+                        {grid.table.map((row, y) => (
                             <TableRow key={y}>
                                 {row.map((cell, x) => (
                                     <GameCell
@@ -46,7 +46,7 @@ function App() {
                                         gameStatus={gameStatus}
                                         onClick={() => click({ x, y })}
                                         onContextMenu={() => flag({ x, y })}
-                                        size={{ width: row.length, height: grid.length }}
+                                        grid={grid}
                                     />
                                 ))}
                             </TableRow>

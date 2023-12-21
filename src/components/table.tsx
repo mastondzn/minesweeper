@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { cn } from '~/utils/classnames';
 import { digitColors } from '~/utils/colors';
+import { type Grid } from '~/utils/grid';
 import { type Cell, type Coordinates } from '~/utils/types';
 
 export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
@@ -45,8 +46,8 @@ export const TableCell = React.forwardRef<
 
 export const GameCell = ({
     cell,
-    coordinates,
-    size,
+    coordinates: { x, y },
+    grid,
     gameStatus,
     onClick,
     onContextMenu,
@@ -56,10 +57,8 @@ export const GameCell = ({
     gameStatus: 'playing' | 'won' | 'lost';
     onClick: () => void;
     onContextMenu: () => void;
-    size: { width: number; height: number };
+    grid: Grid<Cell>;
 }) => {
-    // very bad logic!!
-
     const content =
         cell.flagged && gameStatus !== 'lost'
             ? '🚩'
@@ -71,20 +70,39 @@ export const GameCell = ({
                   ? '💣'
                   : null;
 
+    // const neighbors = {
+    //     top: grid[y - 1]?.[x]?.type === 'empty' && grid[y - 1]?.[x]?.visible,
+    //     bottom: grid[y + 1]?.[x]?.type === 'empty' && grid[y + 1]?.[x]?.visible,
+    //     left: grid[y]?.[x - 1]?.type === 'empty' && grid[y]?.[x - 1]?.visible,
+    //     right: grid[y]?.[x + 1]?.type === 'empty' && grid[y]?.[x + 1]?.visible,
+    // };
+
     const className = cn(
         'select-none',
 
-        // is not last columns
-        coordinates.x !== size.width - 1 && 'border-r-2 border-muted',
-        // is not last row
-        coordinates.y !== size.height - 1 && 'border-b-2 border-muted',
+        // is not top row
+        y !== 0 && 'border-t border-muted',
+        // is not bottom row
+        y !== grid.height - 1 && 'border-b border-muted',
+
+        // is not left column
+        x !== 0 && 'border-l border-muted',
+        // is not right column
+        x !== grid.width - 1 && 'border-r border-muted',
+
+        // neighbors.top && 'border-t-[transparent]',
+        // neighbors.bottom && 'border-b-[transparent]',
+        // neighbors.left && 'border-l-[transparent]',
+        // neighbors.right && 'border-r-[transparent]',
 
         cell.type === 'empty' && (cell.visible || gameStatus === 'lost')
             ? 'bg-stripes-muted'
             : 'hover:bg-slate-400/30 dark:hover:bg-slate-300/20',
+
         cell.type === 'mine' &&
             gameStatus === 'lost' &&
             'bg-red-500 hover:bg-red-600 dark:bg-red-400 dark:hover:bg-red-300',
+
         cell.type === 'number' && digitColors[cell.value],
     );
 

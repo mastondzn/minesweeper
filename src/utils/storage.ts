@@ -4,17 +4,15 @@ import { z } from 'zod';
 
 import { type DeepPartial, type Settings } from './types';
 
-const defineMeta =
-    <TShape>() =>
-    <TSchema extends z.ZodType<TShape, z.ZodTypeDef, unknown>>(meta: {
-        schema: TSchema;
-        default: z.infer<TSchema>;
-    }) => {
-        return meta;
-    };
+const defineMeta = <TShape>(meta: {
+    schema: z.ZodType<TShape, z.ZodTypeDef, TShape>;
+    default: TShape;
+}) => {
+    return meta;
+};
 
 const storageMeta = {
-    settings: defineMeta<Settings>()({
+    settings: defineMeta<Settings>({
         schema: z.object({
             preset: z.enum(['beginner', 'intermediate', 'expert', 'evil']),
             startDirective: z.enum(['none', 'empty', 'numberOrEmpty']),

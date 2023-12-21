@@ -37,8 +37,8 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
             if (state.gameStatus !== 'playing') return state;
 
             return produce(state, (draft) => {
-                let cell = draft.grid[y]?.[x];
-                if (!cell || cell.flagged) return;
+                let cell = draft.grid.at({ x, y });
+                if (cell.flagged) return;
 
                 if (!draft.startedAt) {
                     draft.startedAt = new Date();
@@ -55,7 +55,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     while (shouldRegenerate(cell)) {
                         draft.grid = createGrid(presets[draft.settings.preset]);
                         console.log('regenerating grid');
-                        cell = draft.grid[y]![x]!;
+                        cell = draft.grid.at({ x, y });
                     }
                 }
 
@@ -86,10 +86,10 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
             if (!state.startedAt) return state;
 
             return produce(state, (draft) => {
-                const cell = draft.grid[y]?.[x];
+                const cell = draft.grid.at({ x, y });
 
                 // TODO: we can make the game not be based on luck here in the future
-                if (!cell || cell.visible) return;
+                if (cell.visible) return;
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {

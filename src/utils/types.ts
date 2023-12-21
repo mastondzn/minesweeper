@@ -1,3 +1,4 @@
+import { type Grid } from './grid';
 import { type PresetName } from './presets';
 
 export interface Preset {
@@ -27,7 +28,7 @@ export interface Settings {
 
 export type MinesweeperState = {
     settings: Settings;
-    grid: Cell[][];
+    grid: Grid<Cell>;
 } & (
     | {
           startedAt: Date;
