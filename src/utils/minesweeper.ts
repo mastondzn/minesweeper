@@ -1,4 +1,4 @@
-import { current, type Draft, produce } from 'immer';
+import { type Draft, produce } from 'immer';
 import { create } from 'zustand';
 
 import { createGrid, determineWinCondition, updateNeighbors } from './helpers';
@@ -52,12 +52,10 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                               : false;
                     };
 
-                    let regenerate = shouldRegenerate(cell);
-                    while (regenerate) {
+                    while (shouldRegenerate(cell)) {
                         draft.grid = createGrid(presets[draft.settings.preset]);
                         console.log('regenerating grid');
                         cell = draft.grid[y]![x]!;
-                        regenerate = shouldRegenerate(cell);
                     }
                 }
 
@@ -71,12 +69,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     draft.endedAt = new Date();
                     return;
                 } else if (cell.type === 'empty') {
-                    draft.grid = updateNeighbors(
-                        // we should use current here since passing immer's proxy object is slow, we assign grid here anyway
-                        // see https://immerjs.github.io/immer/performance#for-expensive-search-operations-read-from-the-original-state-not-the-draft
-                        current(draft).grid,
-                        { x, y },
-                    );
+                    updateNeighbors(draft.grid, { x, y });
                 }
 
                 if (determineWinCondition(draft.grid)) {
@@ -100,9 +93,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {
-                    // @ts-expect-error ts server cant realize both these are ok
+                    // @ts-expect-error see above
                     draft.gameStatus = 'won';
-                    // @ts-expect-error ts server cant realize both these are ok
+                    // @ts-expect-error see above
                     draft.endedAt = new Date();
                 }
             });

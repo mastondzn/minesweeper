@@ -26,16 +26,14 @@ const storageMeta = {
     }),
 };
 
-function get<
-    TKey extends keyof typeof storageMeta,
-    TShape extends z.infer<(typeof storageMeta)[TKey]['schema']>,
->(key: TKey): TShape {
+function get<TKey extends keyof typeof storageMeta>(
+    key: TKey,
+): z.infer<(typeof storageMeta)[TKey]['schema']> {
     // TODO: handle this better, if we change the schema and the user still has old schema this will fail
     const raw = localStorage.getItem(key);
     const meta = storageMeta[key];
 
     if (!raw) {
-        // @ts-expect-error safe
         return meta.default;
     }
 
@@ -53,16 +51,14 @@ function get<
         throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
     }
 
-    // @ts-expect-error safe
     return parsed.data;
 }
 
 function set<
     TKey extends keyof typeof storageMeta, //
-    TShape extends z.infer<(typeof storageMeta)[TKey]['schema']>,
->(key: TKey, value: DeepPartial<TShape>): void {
+>(key: TKey, value: DeepPartial<z.infer<(typeof storageMeta)[TKey]['schema']>>): void {
     const meta = storageMeta[key];
-    const before = get(key);
+
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const after = mergeDeep(get(key) ?? {}, value);
     // @ts-expect-error safe
@@ -72,7 +68,6 @@ function set<
         return;
     }
 
-    console.log({ key, value, after, before });
     localStorage.setItem(key, stringify(after));
 }
 
