@@ -13,7 +13,7 @@ export const Count = ({ grid, preset }: { grid: Grid<Cell>; preset: PresetName }
 
     return (
         <div className="flex flex-row items-center gap-4 rounded-md border-2 pl-3 pr-1.5">
-            <p className="text-center text-lg font-semibold tabular-nums">
+            <p className="whitespace-nowrap text-center text-lg font-semibold tabular-nums">
                 {flagged} / {mines} 🚩
             </p>
         </div>
