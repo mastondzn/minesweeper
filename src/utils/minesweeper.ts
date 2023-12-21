@@ -73,7 +73,8 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     return;
                 } else if (cell.type === 'empty') {
                     draft.grid = updateNeighbors(
-                        // we should use current here since passing proxy object is slow, we assign grid here anyway
+                        // we should use current here since passing immer's proxy object is slow, we assign grid here anyway
+                        // see https://immerjs.github.io/immer/performance#for-expensive-search-operations-read-from-the-original-state-not-the-draft
                         current(draft).grid,
                         { x, y },
                     );
