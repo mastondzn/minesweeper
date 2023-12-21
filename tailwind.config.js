@@ -76,25 +76,21 @@ module.exports = {
     plugins: [
         require('tailwindcss-animate'),
         function ({ addUtilities, theme }) {
-            let backgroundSize = '10px 10px';
             let backgroundImage = (color) =>
-                `linear-gradient(135deg, ${color} 10%, transparent 10%, transparent 50%, ${color} 50%, ${color} 60%, transparent 60%, transparent 100%)`;
+                `repeating-linear-gradient(45deg, ${color}, ${color} 2px, transparent 2px, transparent 7px)`;
             let colors = Object.entries(theme('backgroundColor')).filter(
-                ([, value]) => typeof value === 'object' && (value[500] || value['DEFAULT']),
+                ([, value]) => typeof value === 'object' && (value[500] || value.DEFAULT),
             );
 
             addUtilities(
                 Object.fromEntries(
                     colors.map(([name, colors]) => {
-                        let backgroundColor = '#ffffff' + '00';
                         let stripeColor = colors?.[500] || colors['DEFAULT'];
 
                         return [
                             `.bg-stripes-${name}`,
                             {
-                                backgroundColor,
-                                backgroundImage: backgroundImage(stripeColor),
-                                backgroundSize,
+                                background: backgroundImage(stripeColor),
                             },
                         ];
                     }),
@@ -103,8 +99,7 @@ module.exports = {
 
             addUtilities({
                 '.bg-stripes-white': {
-                    backgroundImage: backgroundImage('rgba(255 255 255 / 0.75)'),
-                    backgroundSize,
+                    background: backgroundImage('rgba(255 255 255 / 0.75)'),
                 },
             });
         },

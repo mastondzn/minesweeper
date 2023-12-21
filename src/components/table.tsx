@@ -55,7 +55,7 @@ export const GameCell = ({
     coordinates: Coordinates;
     gameStatus: 'playing' | 'won' | 'lost';
     onClick: () => void;
-    onContextMenu: (e: React.MouseEvent<HTMLTableCellElement>) => void;
+    onContextMenu: () => void;
     size: { width: number; height: number };
 }) => {
     // very bad logic!!
@@ -88,5 +88,16 @@ export const GameCell = ({
         cell.type === 'number' && digitColors[cell.value],
     );
 
-    return <TableCell {...{ onClick, onContextMenu, className }}>{content}</TableCell>;
+    return (
+        <TableCell
+            className={className}
+            onClick={onClick}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                onContextMenu();
+            }}
+        >
+            {content}
+        </TableCell>
+    );
 };
