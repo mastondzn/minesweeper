@@ -147,7 +147,7 @@ export const PresetPicker = (props: {
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    {Object.entries(presets).map(([name]) => {
+                    {Object.keys(presets).map((name) => {
                         return (
                             <SelectItem key={name} value={name}>
                                 {humanizedPresets[name]}
