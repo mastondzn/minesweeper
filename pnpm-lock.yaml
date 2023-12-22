@@ -38,6 +38,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-twc:
+    specifier: ^1.0.1
+    version: 1.0.1(@types/react@18.2.45)(react@18.2.0)
   superjson:
     specifier: ^2.2.1
     version: 2.2.1
@@ -4154,6 +4157,16 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /react-twc@1.0.1(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-8G3iilx8xHHaZqgnZeYeBxihtTVAus42cFZZcKBDFrLPboSn6WL7tV+CQxRtjcNUiLKCU+4AAJGH3Asxwxj89Q==}
+    dependencies:
+      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.45)(react@18.2.0)
+      clsx: 2.0.0
+    transitivePeerDependencies:
+      - '@types/react'
+      - react
     dev: false
 
   /react@18.2.0:
