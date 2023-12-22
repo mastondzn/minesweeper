@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '~/utils/classnames';
+import { cn } from '~/utils/tailwind';
 import { digitColors } from '~/utils/colors';
 import { type Grid } from '~/utils/grid';
 import { type Cell, type Coordinates } from '~/utils/types';

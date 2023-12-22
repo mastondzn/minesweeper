@@ -3,7 +3,7 @@ import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 
 import { Button } from './button';
-import { cn } from '~/utils/classnames';
+import { cn } from '~/utils/tailwind';
 
 export function Timer({
     onClick,

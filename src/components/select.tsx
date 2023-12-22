@@ -2,7 +2,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import * as React from 'react';
 
-import { cn } from '~/utils/classnames';
+import { cn } from '~/utils/tailwind';
 import { humanizedPresets, type PresetName, presets } from '~/utils/presets';
 
 export const Select = SelectPrimitive.Root;
