@@ -11,16 +11,16 @@ import { useMinesweeper } from './utils/minesweeper';
 function App() {
     const {
         grid, //
-        choosePreset,
-        reset,
         gameStatus,
+        settings,
         startedAt,
         endedAt,
-        settings,
+        choosePreset,
+        reset,
         click,
         flag,
     } = useMinesweeper();
-    useKeyPress('r', { onDown: reset });
+    useKeyPress('r', { onUp: reset });
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
