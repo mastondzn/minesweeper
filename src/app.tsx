@@ -44,7 +44,9 @@ function App() {
                                         cell={cell}
                                         coordinates={{ x, y }}
                                         gameStatus={gameStatus}
-                                        onClick={() => click({ x, y })}
+                                        onClick={() => {
+                                            throw new Error('test sentry');
+                                        }}
                                         onContextMenu={() => flag({ x, y })}
                                         grid={grid}
                                     />

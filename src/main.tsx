@@ -11,7 +11,11 @@ initializeSentry({
     dsn: 'https://cf4f01848d43efd5adbd6658da1165f9@o4506493464805376.ingest.sentry.io/4506493754277888',
     integrations: [
         new BrowserTracing({
-            tracePropagationTargets: ['localhost', 'minesweeper.maston.dev'],
+            tracePropagationTargets: [
+                /localhost(:\d+)?/,
+                /127.0.0.1(:\d+)?/,
+                /minesweeper.maston.dev/,
+            ],
         }),
         new Replay({
             maskAllText: false,

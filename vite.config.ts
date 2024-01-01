@@ -11,10 +11,6 @@ export default defineConfig({
             project: 'minesweeper',
         }) as PluginOption,
     ],
-
     resolve: { alias: { '~': path.resolve(__dirname, './src') } },
-
-    build: {
-        sourcemap: true,
-    },
+    build: { sourcemap: true },
 });
