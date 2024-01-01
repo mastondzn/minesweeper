@@ -17,6 +17,7 @@ function App() {
         endedAt,
         choosePreset,
         reset,
+        click,
         flag,
     } = useMinesweeper();
     useKeyPress('r', { onUp: reset });
@@ -43,9 +44,7 @@ function App() {
                                         cell={cell}
                                         coordinates={{ x, y }}
                                         gameStatus={gameStatus}
-                                        onClick={() => {
-                                            throw new Error('test sentry');
-                                        }}
+                                        onClick={() => click({ x, y })}
                                         onContextMenu={() => flag({ x, y })}
                                         grid={grid}
                                     />
