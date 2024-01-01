@@ -16,6 +16,8 @@
     "dependencies": {
         "@radix-ui/react-select": "^2.0.0",
         "@radix-ui/react-slot": "^1.0.2",
+        "@sentry/react": "^7.91.0",
+        "@sentry/vite-plugin": "^2.10.2",
         "@tabler/icons-react": "^2.44.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
