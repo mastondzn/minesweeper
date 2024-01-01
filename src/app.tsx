@@ -17,7 +17,6 @@ function App() {
         endedAt,
         choosePreset,
         reset,
-        click,
         flag,
     } = useMinesweeper();
     useKeyPress('r', { onUp: reset });
