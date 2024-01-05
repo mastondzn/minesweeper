@@ -18,7 +18,7 @@ export type Cell = (
     | { type: 'empty' }
 ) & {
     flagged: boolean;
-    visible: boolean;
+    clicked: boolean;
 };
 
 export interface Settings {

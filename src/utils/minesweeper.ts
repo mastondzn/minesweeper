@@ -59,7 +59,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     }
                 }
 
-                cell.visible = true;
+                cell.clicked = true;
                 if (cell.type === 'mine') {
                     // we cannot assign to draft and spread to please TS (see below)
                     // https://immerjs.github.io/immer/pitfalls#dont-reassign-the-recipe-argument
@@ -89,7 +89,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                 const cell = draft.grid.at({ x, y });
 
                 // TODO: we can make the game not be based on luck here in the future
-                if (cell.visible) return;
+                if (cell.clicked) return;
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {

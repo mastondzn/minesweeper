@@ -62,16 +62,16 @@ export const GameCell = ({
     const isNotLeftColumn = x !== 0;
     const isNotRightColumn = x !== grid.width - 1;
 
-    const isClickable = !cell.visible && gameStatus === 'playing';
-    const isRevealed = cell.visible || gameStatus !== 'playing';
+    const isClickable = !cell.clicked && gameStatus === 'playing';
+    const isRevealed = cell.clicked || gameStatus !== 'playing';
 
     const isRevealedEmpty = isRevealed && cell.type === 'empty';
     const isRevealedNumber = isRevealed && cell.type === 'number';
     const isRevealedBomb = isRevealed && cell.type === 'mine';
 
     const isWrongfullyFlagged = isRevealed && cell.flagged && cell.type !== 'mine';
-    const isWrongfullyClicked = isRevealed && cell.visible && cell.type === 'mine';
     const isTruthfullyFlagged = isRevealed && cell.flagged && cell.type === 'mine';
+    const isWrongfullyClicked = isRevealed && cell.clicked && cell.type === 'mine';
 
     const content = cell.flagged
         ? '🚩'

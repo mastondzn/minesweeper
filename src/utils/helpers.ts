@@ -3,7 +3,7 @@ import { type Cell, type Coordinates, type Preset } from './types';
 
 export const createGrid = ({ height, width, mines }: Preset): Grid<Cell> => {
     const grid = new Grid<Cell>({
-        fill: () => ({ type: 'empty', visible: false, flagged: false }),
+        fill: () => ({ type: 'empty', clicked: false, flagged: false }),
         width,
         height,
     });
@@ -14,7 +14,7 @@ export const createGrid = ({ height, width, mines }: Preset): Grid<Cell> => {
         const x = Math.floor(Math.random() * width);
         const y = Math.floor(Math.random() * height);
         if (grid.at({ x, y }).type === 'empty') {
-            grid.set({ x, y }, { type: 'mine', visible: false, flagged: false });
+            grid.set({ x, y }, { type: 'mine', clicked: false, flagged: false });
             insertedMines++;
         }
     }
@@ -39,7 +39,7 @@ export const createGrid = ({ height, width, mines }: Preset): Grid<Cell> => {
         }
 
         if (mines === 0) continue;
-        grid.set({ x, y }, { type: 'number', value: mines, visible: false, flagged: false });
+        grid.set({ x, y }, { type: 'number', value: mines, clicked: false, flagged: false });
     }
 
     return grid;
@@ -51,11 +51,11 @@ export const updateNeighbors = (grid: Grid<Cell>, { x, y }: Coordinates) => {
     for (const neighbor of grid.neighbors({ x, y })) {
         const isEmpty = cell.type === 'empty';
         const isNotAMine = neighbor.value.type !== 'mine';
-        const isNotVisible = !neighbor.value.visible;
+        const isNotVisible = !neighbor.value.clicked;
         const isNotFlagged = !neighbor.value.flagged;
 
         if (isEmpty && isNotAMine && isNotVisible && isNotFlagged) {
-            neighbor.value.visible = true;
+            neighbor.value.clicked = true;
             neighbor.value.flagged = false;
             updateNeighbors(grid, neighbor);
         }
@@ -67,7 +67,7 @@ export const updateNeighbors = (grid: Grid<Cell>, { x, y }: Coordinates) => {
 export const determineWinCondition = (grid: Grid<Cell>) => {
     // if every cell that is not a mine is visible, the player wins
     for (const { value: cell } of grid) {
-        if (!cell.visible && cell.type !== 'mine') return false;
+        if (!cell.clicked && cell.type !== 'mine') return false;
     }
     return true;
 };
