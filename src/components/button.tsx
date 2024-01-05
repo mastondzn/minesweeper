@@ -59,7 +59,11 @@ export const BottomButtons = () => {
     return (
         <div className="flex flex-row gap-2">
             <Button variant="outline" className="h-fit w-fit rounded-full border-2 p-3" asChild>
-                <a href="https://github.com/mastondzn/minesweeper" target="_blank">
+                <a
+                    href="https://github.com/mastondzn/minesweeper"
+                    target="_blank"
+                    aria-label="Go to GitHub"
+                >
                     <IconBrandGithub className="h-6 w-6" />
                 </a>
             </Button>
@@ -67,6 +71,7 @@ export const BottomButtons = () => {
                 variant="outline"
                 className="h-fit w-fit rounded-full border-2 p-3"
                 onClick={toggleTheme}
+                aria-label="Toggle theme"
             >
                 {theme === 'dark' ? (
                     <IconMoon className="h-6 w-6" />

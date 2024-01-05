@@ -1,22 +1,20 @@
 import * as React from 'react';
 
-import { cn } from '~/utils/tailwind';
 import { digitColors } from '~/utils/colors';
 import { type Grid } from '~/utils/grid';
+import { cn } from '~/utils/tailwind';
 import { type Cell, type Coordinates } from '~/utils/types';
 
 export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
     ({ className, ...props }, ref) => (
-        <div className="relative overflow-auto">
-            <table
-                ref={ref}
-                className={cn(
-                    'border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted text-sm',
-                    className,
-                )}
-                {...props}
-            />
-        </div>
+        <table
+            ref={ref}
+            className={cn(
+                'border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted text-sm',
+                className,
+            )}
+            {...props}
+        />
     ),
 );
 
@@ -59,61 +57,59 @@ export const GameCell = ({
     onContextMenu: () => void;
     grid: Grid<Cell>;
 }) => {
-    const content =
-        cell.flagged && gameStatus !== 'lost'
-            ? '🚩'
-            : !cell.visible && gameStatus !== 'lost'
-              ? null
-              : cell.type === 'number'
-                ? cell.value
-                : cell.type === 'mine'
-                  ? '💣'
-                  : null;
+    const isNotTopRow = y !== 0;
+    const isNotBottomRow = y !== grid.height - 1;
+    const isNotLeftColumn = x !== 0;
+    const isNotRightColumn = x !== grid.width - 1;
 
-    // const neighbors = {
-    //     top: grid[y - 1]?.[x]?.type === 'empty' && grid[y - 1]?.[x]?.visible,
-    //     bottom: grid[y + 1]?.[x]?.type === 'empty' && grid[y + 1]?.[x]?.visible,
-    //     left: grid[y]?.[x - 1]?.type === 'empty' && grid[y]?.[x - 1]?.visible,
-    //     right: grid[y]?.[x + 1]?.type === 'empty' && grid[y]?.[x + 1]?.visible,
-    // };
+    const isClickable = !cell.visible && gameStatus === 'playing';
+    const isRevealed = cell.visible || gameStatus !== 'playing';
 
-    const className = cn(
+    const isRevealedEmpty = isRevealed && cell.type === 'empty';
+    const isRevealedNumber = isRevealed && cell.type === 'number';
+    const isRevealedBomb = isRevealed && cell.type === 'mine';
+
+    const isWrongfullyFlagged = isRevealed && cell.flagged && cell.type !== 'mine';
+    const isWrongfullyClicked = isRevealed && cell.visible && cell.type === 'mine';
+    const isTruthfullyFlagged = isRevealed && cell.flagged && cell.type === 'mine';
+
+    const content = cell.flagged
+        ? '🚩'
+        : isRevealedBomb
+          ? '💣'
+          : isRevealedNumber
+            ? cell.value
+            : null;
+
+    const styles = cn(
         'select-none',
 
-        // is not top row
-        y !== 0 && 'border-t border-muted',
-        // is not bottom row
-        y !== grid.height - 1 && 'border-b border-muted',
+        isNotTopRow && 'border-t border-muted',
+        isNotBottomRow && 'border-b border-muted',
+        isNotLeftColumn && 'border-l border-muted',
+        isNotRightColumn && 'border-r border-muted',
 
-        // is not left column
-        x !== 0 && 'border-l border-muted',
-        // is not right column
-        x !== grid.width - 1 && 'border-r border-muted',
-
-        // neighbors.top && 'border-t-[transparent]',
-        // neighbors.bottom && 'border-b-[transparent]',
-        // neighbors.left && 'border-l-[transparent]',
-        // neighbors.right && 'border-r-[transparent]',
-
-        cell.type === 'empty' && (cell.visible || gameStatus === 'lost')
-            ? 'bg-stripes-muted'
-            : 'hover:bg-slate-400/30 dark:hover:bg-slate-300/20',
-
-        cell.type === 'mine' &&
-            gameStatus === 'lost' &&
-            'bg-red-500 hover:bg-red-600 dark:bg-red-400 dark:hover:bg-red-300',
-
-        cell.type === 'number' && digitColors[cell.value],
+        isClickable && 'cursor-pointer hover:bg-muted/50 focus:bg-muted/50 active:bg-muted/50',
+        isRevealedNumber && `bg-muted/30 ${digitColors[cell.value]}`,
+        isRevealedEmpty && 'bg-muted/50',
+        isRevealedBomb && !isWrongfullyClicked && 'bg-rose-200 dark:bg-rose-950',
+        (isWrongfullyFlagged || isWrongfullyClicked) && 'bg-rose-400 dark:bg-rose-700',
+        isTruthfullyFlagged && 'bg-emerald-400 dark:bg-emerald-700',
     );
 
     return (
         <TableCell
-            className={className}
+            className={styles}
             onClick={onClick}
             onContextMenu={(e) => {
                 e.preventDefault();
                 onContextMenu();
             }}
+            onKeyUp={(e) => {
+                if (['Enter', ' '].includes(e.key)) onClick();
+                if (e.key === 'F') onContextMenu();
+            }}
+            tabIndex={isClickable ? 0 : undefined}
         >
             {content}
         </TableCell>

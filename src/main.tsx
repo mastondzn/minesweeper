@@ -10,16 +10,10 @@ import { ThemeProvider } from './components/theme-provider.tsx';
 initializeSentry({
     dsn: 'https://cf4f01848d43efd5adbd6658da1165f9@o4506493464805376.ingest.sentry.io/4506493754277888',
     integrations: [
-        new BrowserTracing({
-            tracePropagationTargets: [
-                /localhost(:\d+)?/,
-                /127.0.0.1(:\d+)?/,
-                /minesweeper.maston.dev/,
-            ],
-        }),
+        new BrowserTracing(),
         new Replay({
             maskAllText: false,
-            blockAllMedia: false,
+            blockAllMedia: true,
         }),
     ],
     tracesSampleRate: 1,

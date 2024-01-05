@@ -83,7 +83,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
     },
     flag: ({ x, y }) => {
         set((state) => {
-            if (!state.startedAt) return state;
+            if (state.gameStatus !== 'playing') return state;
 
             return produce(state, (draft) => {
                 const cell = draft.grid.at({ x, y });
@@ -93,7 +93,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {
+                    // @ts-expect-error see above
                     draft.gameStatus = 'won';
+                    // @ts-expect-error see above
                     draft.endedAt = new Date();
                 }
             });

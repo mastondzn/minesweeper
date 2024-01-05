@@ -15,16 +15,12 @@ module.exports = defineConfig({
         'plugin:@typescript-eslint/stylistic-type-checked',
         'prettier',
     ],
-    ignorePatterns: ['dist'],
+    ignorePatterns: ['dist', '.eslintrc.cjs'],
     parser: '@typescript-eslint/parser',
     parserOptions: { project: ['./tsconfig.json', './tsconfig.node.json'] },
     settings: {
-        'import/resolver': {
-            typescript: {},
-        },
-        tailwindcss: {
-            callees: ['cn'],
-        },
+        'import/resolver': { typescript: {} },
+        tailwindcss: { callees: ['cn', 'twc', 'twx'] },
     },
     plugins: ['react-refresh', 'simple-import-sort'],
     rules: {

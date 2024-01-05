@@ -2,8 +2,8 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import * as React from 'react';
 
-import { cn } from '~/utils/tailwind';
 import { humanizedPresets, type PresetName, presets } from '~/utils/presets';
+import { cn } from '~/utils/tailwind';
 
 export const Select = SelectPrimitive.Root;
 export const SelectGroup = SelectPrimitive.Group;
@@ -142,10 +142,10 @@ export const PresetPicker = (props: {
 }) => {
     return (
         <Select {...props}>
-            <SelectTrigger className="w-[270px]">
+            <SelectTrigger className="w-[270px]" aria-label="Change minesweeper preset">
                 <SelectValue placeholder="Change preset" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent aria-label="Choose Preset">
                 <SelectGroup>
                     {Object.keys(presets).map((name) => {
                         return (
