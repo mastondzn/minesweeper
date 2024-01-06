@@ -1,6 +1,6 @@
 import './index.css';
 
-import { BrowserTracing, init as initializeSentry, Replay } from '@sentry/react';
+import { BrowserTracing, init as initializeSentry } from '@sentry/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

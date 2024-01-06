@@ -3,8 +3,6 @@ import { useKey } from 'react-use';
 import { type Grid } from './grid';
 import { type Cell, type Coordinates, type GameStatus } from './types';
 
-let lastFocusedCell: Coordinates | null = null;
-
 const getFocusedCell = (): Coordinates | null => {
     const coordinates = document.activeElement?.id
         .split(',')
@@ -17,6 +15,8 @@ const getFocusedCell = (): Coordinates | null => {
 
     return { x, y };
 };
+
+let lastFocusedCell: Coordinates | null = null;
 
 const focus = ({ x, y }: Coordinates) => {
     // eslint-disable-next-line unicorn/prefer-query-selector
