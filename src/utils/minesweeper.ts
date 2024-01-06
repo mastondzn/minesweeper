@@ -54,7 +54,6 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
 
                     while (shouldRegenerate(cell)) {
                         draft.grid = createGrid(presets.get(draft.settings.preset));
-                        console.log('regenerating grid');
                         cell = draft.grid.at({ x, y });
                     }
                 }

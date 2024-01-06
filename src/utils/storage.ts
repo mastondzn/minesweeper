@@ -61,7 +61,6 @@ function set<
     const after = mergeDeep(get(key) ?? {}, value);
     // @ts-expect-error safe
     if (equals(meta.default, after) as boolean) {
-        console.log('removing', key);
         localStorage.removeItem(key);
         return;
     }

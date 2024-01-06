@@ -10,8 +10,6 @@ const getFocusedCell = (): Coordinates | null => {
         .split(',')
         .map((coord) => Number.parseInt(coord, 10));
 
-    console.log(coordinates);
-
     const x = coordinates?.[0];
     const y = coordinates?.[1];
 
@@ -23,7 +21,6 @@ const getFocusedCell = (): Coordinates | null => {
 const focus = ({ x, y }: Coordinates) => {
     // eslint-disable-next-line unicorn/prefer-query-selector
     const cell = document.getElementById(`${x},${y}`);
-    console.log({ cell, x, y });
     if (cell instanceof HTMLElement) {
         lastFocusedCell = { x, y };
         cell.focus();
