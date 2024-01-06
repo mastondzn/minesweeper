@@ -1,5 +1,5 @@
 import ConfettiExplosion from 'react-confetti-explosion';
-import { useKeyPressEvent } from 'react-use';
+import { useKey } from 'react-use';
 
 import { BottomButtons } from './components/button';
 import { Count } from './components/counts';
@@ -23,8 +23,8 @@ function App() {
         flag,
     } = useMinesweeper();
 
-    useKeyPressEvent((e) => ['r', 'R'].includes(e.key), reset);
-    useKeyPressEvent(
+    useKey((e) => ['r', 'R'].includes(e.key), reset);
+    useKey(
         (e) => [...'123456789'].includes(e.key),
         (e) => {
             const preset = presets.list[Number.parseInt(e.key, 10) - 1]?.name;
