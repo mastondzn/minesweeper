@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css?family=Inter');
+
+body {
+    font-family: Inter, sans-serif;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
@@ -73,13 +79,4 @@
     body {
         @apply bg-background text-foreground;
     }
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('https://fonts.googleapis.com/css?family=Inter') format('woff2');
-}
-
-body {
-    font-family: 'Inter', sans-serif;
 }

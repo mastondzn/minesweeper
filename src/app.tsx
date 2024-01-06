@@ -23,6 +23,7 @@ function App() {
         flag,
     } = useMinesweeper();
 
+    useKeyboardNavigation({ gameStatus, grid });
     useKey((e) => ['r', 'R'].includes(e.key), reset);
     useKey(
         (e) => [...'123456789'].includes(e.key),
@@ -31,7 +32,6 @@ function App() {
             if (preset) choosePreset(preset);
         },
     );
-    useKeyboardNavigation({ gameStatus, grid });
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
