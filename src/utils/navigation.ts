@@ -1,4 +1,4 @@
-import { useKeyPressEvent } from 'react-use';
+import { useKey } from 'react-use';
 
 import { type Grid } from './grid';
 import { type Cell, type Coordinates, type GameStatus } from './types';
@@ -40,7 +40,7 @@ export const useKeyboardNavigation = ({
     gameStatus: GameStatus;
     grid: Grid<Cell>;
 }) => {
-    useKeyPressEvent(
+    useKey(
         (e) => keys.includes(e.key as (typeof keys)[number]),
         (e) => {
             if (gameStatus !== 'playing') return;
