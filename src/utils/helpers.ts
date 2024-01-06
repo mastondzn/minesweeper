@@ -1,5 +1,6 @@
 import { Grid } from './grid';
-import { type Cell, type Coordinates, type Preset } from './types';
+import { type Preset } from './presets';
+import { type Cell, type Coordinates } from './types';
 
 export const createGrid = ({ height, width, mines }: Preset): Grid<Cell> => {
     const grid = new Grid<Cell>({

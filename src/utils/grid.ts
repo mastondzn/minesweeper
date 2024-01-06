@@ -80,6 +80,54 @@ export class Grid<T> {
         return y < this.height && x < this.width && y >= 0 && x >= 0;
     }
 
+    public find(
+        predicate: (value: T, coords: Coordinates) => unknown,
+    ): { value: T; coordinates: Coordinates } | null {
+        for (const { value, x, y } of this) {
+            if (predicate(value, { x, y })) return { value, coordinates: { x, y } };
+        }
+        return null;
+    }
+
+    public findReverse(
+        predicate: (value: T, coords: Coordinates) => unknown,
+    ): { value: T; coordinates: Coordinates } | null {
+        for (let y = this.table.length; y >= 0; y--) {
+            const element = this.table[y];
+            if (!element) continue;
+            for (let x = element.length; x >= 0; x--) {
+                const value = element[x];
+                if (!value) continue;
+                if (predicate(value, { x, y })) return { value, coordinates: { x, y } };
+            }
+        }
+        return null;
+    }
+
+    public getColumn(x: number): T[] {
+        return this.table.map((row) => row[x]!);
+    }
+
+    public getRow(y: number): T[] {
+        return this.table[y]!;
+    }
+
+    public getAbove({ x, y }: Coordinates): T[] {
+        return this.table.slice(0, y).map((row) => row[x]!);
+    }
+
+    public getBelow({ x, y }: Coordinates): T[] {
+        return this.table.slice(y + 1).map((row) => row[x]!);
+    }
+
+    public getLeft({ x, y }: Coordinates): T[] {
+        return this.table[y]!.slice(0, x);
+    }
+
+    public getRight({ x, y }: Coordinates): T[] {
+        return this.table[y]!.slice(x + 1);
+    }
+
     // subgrid({ from, to }: { from: Coordinates; to: Coordinates }): Grid<T> {
     //     const width = to.x - from.x + 1;
     //     const height = to.y - from.y + 1;

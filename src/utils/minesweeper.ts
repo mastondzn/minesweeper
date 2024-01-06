@@ -9,7 +9,7 @@ import { type Cell, type Minesweeper } from './types';
 const settings = storage.get('settings');
 
 const resetGame = (draft: Draft<Minesweeper>) => {
-    draft.grid = createGrid(presets[draft.settings.preset]);
+    draft.grid = createGrid(presets.get(draft.settings.preset));
     draft.gameStatus = 'playing';
     draft.startedAt = null;
     draft.endedAt = null;
@@ -17,7 +17,7 @@ const resetGame = (draft: Draft<Minesweeper>) => {
 
 export const useMinesweeper = create<Minesweeper>()((set) => ({
     settings,
-    grid: createGrid(presets[settings.preset]),
+    grid: createGrid(presets.get(settings.preset)),
     gameStatus: 'playing',
     startedAt: null,
     endedAt: null,
@@ -53,7 +53,7 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     };
 
                     while (shouldRegenerate(cell)) {
-                        draft.grid = createGrid(presets[draft.settings.preset]);
+                        draft.grid = createGrid(presets.get(draft.settings.preset));
                         console.log('regenerating grid');
                         cell = draft.grid.at({ x, y });
                     }

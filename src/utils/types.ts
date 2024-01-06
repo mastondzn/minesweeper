@@ -1,12 +1,6 @@
 import { type Grid } from './grid';
 import { type PresetName } from './presets';
 
-export interface Preset {
-    width: number;
-    height: number;
-    mines: number;
-}
-
 export interface Coordinates {
     x: number;
     y: number;
@@ -41,6 +35,8 @@ export type MinesweeperState = {
           gameStatus: 'playing';
       }
 );
+
+export type GameStatus = MinesweeperState['gameStatus'];
 
 export interface MinesweeperActions {
     click: ({ x, y }: Coordinates) => void;

@@ -9,14 +9,9 @@ import { ThemeProvider } from './components/theme-provider.tsx';
 
 initializeSentry({
     dsn: 'https://cf4f01848d43efd5adbd6658da1165f9@o4506493464805376.ingest.sentry.io/4506493754277888',
-    integrations: [
-        new BrowserTracing(),
-        new Replay({
-            maskAllText: false,
-            blockAllMedia: true,
-        }),
-    ],
+    integrations: [new BrowserTracing()],
     tracesSampleRate: 1,
+    environment: import.meta.env.PROD ? 'production' : 'development',
 });
 
 const root = document.querySelector('#root');

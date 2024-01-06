@@ -1,12 +1,14 @@
 import ConfettiExplosion from 'react-confetti-explosion';
+import { useKeyPressEvent } from 'react-use';
 
 import { BottomButtons } from './components/button';
 import { Count } from './components/counts';
 import { PresetPicker } from './components/select';
 import { GameCell, Table, TableBody, TableRow } from './components/table';
 import { Timer } from './components/timer';
-import { useKeyPress } from './utils/hooks';
 import { useMinesweeper } from './utils/minesweeper';
+import { useKeyboardNavigation } from './utils/navigation';
+import { presets } from './utils/presets';
 
 function App() {
     const {
@@ -20,7 +22,16 @@ function App() {
         click,
         flag,
     } = useMinesweeper();
-    useKeyPress('r', { onUp: reset });
+
+    useKeyPressEvent((e) => ['r', 'R'].includes(e.key), reset);
+    useKeyPressEvent(
+        (e) => [...'123456789'].includes(e.key),
+        (e) => {
+            const preset = presets.list[Number.parseInt(e.key, 10) - 1]?.name;
+            if (preset) choosePreset(preset);
+        },
+    );
+    useKeyboardNavigation({ gameStatus, grid });
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">

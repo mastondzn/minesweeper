@@ -9,7 +9,7 @@ export const Count = ({ grid, preset }: { grid: Grid<Cell>; preset: PresetName }
         if (cell.flagged) flagged++;
     }
 
-    const { mines } = presets[preset];
+    const { mines } = presets.get(preset);
 
     return (
         <div className="flex flex-row items-center gap-4 rounded-md border-2 pl-3 pr-1.5">

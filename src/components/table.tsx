@@ -1,46 +1,12 @@
-import * as React from 'react';
-
 import { digitColors } from '~/utils/colors';
 import { type Grid } from '~/utils/grid';
-import { cn } from '~/utils/tailwind';
-import { type Cell, type Coordinates } from '~/utils/types';
+import { cn, twx } from '~/utils/tailwind';
+import { type Cell, type Coordinates, type GameStatus } from '~/utils/types';
 
-export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-    ({ className, ...props }, ref) => (
-        <table
-            ref={ref}
-            className={cn(
-                'border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted text-sm',
-                className,
-            )}
-            {...props}
-        />
-    ),
-);
-
-export const TableBody = React.forwardRef<
-    HTMLTableSectionElement,
-    React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => <tbody ref={ref} className={className} {...props} />);
-
-export const TableRow = React.forwardRef<
-    HTMLTableRowElement,
-    React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => <tr ref={ref} className={className} {...props} />);
-
-export const TableCell = React.forwardRef<
-    HTMLTableCellElement,
-    React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-    <td
-        ref={ref}
-        className={cn(
-            'h-10 min-h-[40px] w-10 min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors',
-            className,
-        )}
-        {...props}
-    />
-));
+export const Table = twx.table`border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted`;
+export const TableBody = twx.tbody``;
+export const TableRow = twx.tr``;
+export const TableCell = twx.td`h-10 min-h-[40px] w-10 min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
 
 export const GameCell = ({
     cell,
@@ -52,7 +18,7 @@ export const GameCell = ({
 }: {
     cell: Cell;
     coordinates: Coordinates;
-    gameStatus: 'playing' | 'won' | 'lost';
+    gameStatus: GameStatus;
     onClick: () => void;
     onContextMenu: () => void;
     grid: Grid<Cell>;
@@ -99,6 +65,7 @@ export const GameCell = ({
 
     return (
         <TableCell
+            id={`${x},${y}`}
             className={styles}
             onClick={onClick}
             onContextMenu={(e) => {
@@ -107,7 +74,7 @@ export const GameCell = ({
             }}
             onKeyUp={(e) => {
                 if (['Enter', ' '].includes(e.key)) onClick();
-                if (e.key === 'F') onContextMenu();
+                if (['F', 'f'].includes(e.key)) onContextMenu();
             }}
             tabIndex={isClickable ? 0 : undefined}
         >
