@@ -1,18 +1,18 @@
 import { equals, mergeDeepRight as mergeDeep } from 'ramda';
-import { parse, stringify } from 'superjson';
+import * as superjson from 'superjson';
 import { z } from 'zod';
 
-import { type DeepPartial, type Settings } from './types';
+import { type DeepPartial } from './types';
 
-const defineMeta = <TShape>(meta: {
-    schema: z.ZodType<TShape, z.ZodTypeDef, TShape>;
-    default: TShape;
+const defineMeta = <TSchema extends z.AnyZodObject>(meta: {
+    schema: TSchema;
+    default: z.infer<TSchema>;
 }) => {
     return meta;
 };
 
-const storageMeta = {
-    settings: defineMeta<Settings>({
+export const storageMeta = {
+    settings: defineMeta({
         schema: z.object({
             preset: z.enum(['beginner', 'intermediate', 'expert', 'evil']),
             startDirective: z.enum(['none', 'empty', 'numberOrEmpty']),
@@ -22,50 +22,72 @@ const storageMeta = {
             startDirective: 'empty',
         },
     }),
-};
+} as const;
+
+export type Settings = z.infer<typeof storageMeta.settings.schema>;
 
 function get<TKey extends keyof typeof storageMeta>(
     key: TKey,
-): z.infer<(typeof storageMeta)[TKey]['schema']> {
+): z.infer<(typeof storageMeta)[TKey]['schema']>;
+
+function get<TKey extends keyof typeof storageMeta>(
+    key: TKey,
+    withDefaults: false,
+): DeepPartial<z.infer<(typeof storageMeta)[TKey]['schema']>> | null;
+
+function get<TKey extends keyof typeof storageMeta>(
+    key: TKey,
+    withDefaults?: false,
+):
+    | z.infer<(typeof storageMeta)[TKey]['schema']>
+    | DeepPartial<z.infer<(typeof storageMeta)[TKey]['schema']>>
+    | null {
     // TODO: handle this better, if we change the schema and the user still has old schema this will fail
     const raw = localStorage.getItem(key);
     const meta = storageMeta[key];
+    const schema = withDefaults === false ? meta.schema.deepPartial() : meta.schema;
 
     if (!raw) {
-        return meta.default;
+        return withDefaults === false ? null : meta.default;
     }
 
-    let superjsond: unknown;
+    let parsed: z.infer<typeof schema>;
     try {
-        superjsond = parse(raw);
+        parsed = schema.parse(
+            withDefaults === false
+                ? superjson.parse(raw)
+                : mergeDeep(meta.default, superjson.parse<object>(raw)),
+        );
     } catch (error) {
         console.warn(error);
         throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
     }
 
-    const parsed = storageMeta[key].schema.safeParse(superjsond);
-    if (!parsed.success) {
-        console.warn(parsed.error);
-        throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
-    }
-
-    return parsed.data;
+    // @ts-expect-error safe
+    return parsed;
 }
 
-function set<
-    TKey extends keyof typeof storageMeta, //
->(key: TKey, value: DeepPartial<z.infer<(typeof storageMeta)[TKey]['schema']>>): void {
+function set<TKey extends keyof typeof storageMeta>(
+    key: TKey,
+    value: DeepPartial<z.infer<(typeof storageMeta)[TKey]['schema']>>,
+): void {
     const meta = storageMeta[key];
+    const schema = meta.schema.deepPartial();
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const after = mergeDeep(get(key) ?? {}, value);
+    const after = mergeDeep(get(key, false) ?? {}, value);
+
+    if (!schema.safeParse(after).success) {
+        throw new Error(`Failed to validate ${key} with schema`);
+    }
+
     // @ts-expect-error safe
-    if (equals(meta.default, after) as boolean) {
+    if (equals(meta.default, mergeDeep(meta.default, after)) as boolean) {
         localStorage.removeItem(key);
         return;
     }
 
-    localStorage.setItem(key, stringify(after));
+    localStorage.setItem(key, superjson.stringify(after));
 }
 
 export const storage = { get, set };

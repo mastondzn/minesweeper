@@ -22,7 +22,7 @@
         "noUncheckedIndexedAccess": true,
         "strictNullChecks": true,
 
-        "types": ["react", "react-dom"],
+        "types": ["react", "react-dom", "vite/client"],
 
         "baseUrl": ".",
         "paths": {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from './button';
 import { cn } from '~/utils/tailwind';
+import { type GameStatus } from '~/utils/types';
 
 export function Timer({
     onClick,
@@ -14,7 +15,7 @@ export function Timer({
     onClick: () => void;
     startedAt: Date | null;
     endedAt: Date | null;
-    gameStatus: 'won' | 'lost' | 'playing';
+    gameStatus: GameStatus;
 }) {
     const [milliseconds, setMilliseconds] = useState(0);
 

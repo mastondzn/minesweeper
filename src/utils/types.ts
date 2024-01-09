@@ -1,5 +1,6 @@
 import { type Grid } from './grid';
 import { type PresetName } from './presets';
+import { type Settings } from './storage';
 
 export interface Coordinates {
     x: number;
@@ -7,18 +8,12 @@ export interface Coordinates {
 }
 
 export type Cell = (
-    | { type: 'mine' } //
+    | { type: 'mine' | 'empty' } //
     | { type: 'number'; value: number }
-    | { type: 'empty' }
 ) & {
     flagged: boolean;
     clicked: boolean;
 };
-
-export interface Settings {
-    preset: PresetName;
-    startDirective: 'none' | 'empty' | 'numberOrEmpty';
-}
 
 export type MinesweeperState = {
     settings: Settings;
