@@ -35,8 +35,8 @@ export const buttonVariants = cva(
 
 export interface ButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-    asChild?: boolean
+        VariantProps<typeof buttonVariants> {
+    asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -74,13 +74,11 @@ export function BottomButtons() {
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark'
-                    ? (
-                        <IconMoon className="h-6 w-6" />
-                        )
-                    : (
-                        <IconSun className="h-6 w-6" />
-                        )}
+                {theme === 'dark' ? (
+                    <IconMoon className="h-6 w-6" />
+                ) : (
+                    <IconSun className="h-6 w-6" />
+                )}
             </Button>
         </div>
     );

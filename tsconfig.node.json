@@ -5,6 +5,7 @@
         "moduleResolution": "bundler",
 
         "types": ["node"],
+        "strictNullChecks": true,
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true
     },
