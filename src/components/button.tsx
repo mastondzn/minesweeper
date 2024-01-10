@@ -1,6 +1,6 @@
 import { Slot } from '@radix-ui/react-slot';
 import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 
 import { useTheme } from './theme-provider';
@@ -35,8 +35,8 @@ export const buttonVariants = cva(
 
 export interface ButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
-    asChild?: boolean;
+    VariantProps<typeof buttonVariants> {
+    asChild?: boolean
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -53,7 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-export const BottomButtons = () => {
+export function BottomButtons() {
     const { toggleTheme, theme } = useTheme();
 
     return (
@@ -63,6 +63,7 @@ export const BottomButtons = () => {
                     href="https://github.com/mastondzn/minesweeper"
                     target="_blank"
                     aria-label="Go to GitHub"
+                    rel="noreferrer"
                 >
                     <IconBrandGithub className="h-6 w-6" />
                 </a>
@@ -73,12 +74,14 @@ export const BottomButtons = () => {
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark' ? (
-                    <IconMoon className="h-6 w-6" />
-                ) : (
-                    <IconSun className="h-6 w-6" />
-                )}
+                {theme === 'dark'
+                    ? (
+                        <IconMoon className="h-6 w-6" />
+                        )
+                    : (
+                        <IconSun className="h-6 w-6" />
+                        )}
             </Button>
         </div>
     );
-};
+}

@@ -1,56 +1,58 @@
 import { useKey } from 'react-use';
 
-import { type Grid } from './grid';
-import { type Cell, type Coordinates, type GameStatus } from './types';
+import type { Grid } from './grid';
+import type { Cell, Coordinates, GameStatus } from './types';
 
-const getFocusedCell = (): Coordinates | null => {
+function getFocusedCell(): Coordinates | null {
     const coordinates = document.activeElement?.id
         .split(',')
-        .map((coord) => Number.parseInt(coord, 10));
+        .map(coord => Number.parseInt(coord, 10));
 
     const x = coordinates?.[0];
     const y = coordinates?.[1];
 
-    if (typeof x !== 'number' || typeof y !== 'number') return null;
+    if (typeof x !== 'number' || typeof y !== 'number')
+        return null;
 
     return { x, y };
-};
+}
 
 let lastFocusedCell: Coordinates | null = null;
 
-const focus = ({ x, y }: Coordinates) => {
-    // eslint-disable-next-line unicorn/prefer-query-selector
+function focus({ x, y }: Coordinates) {
     const cell = document.getElementById(`${x},${y}`);
     if (cell instanceof HTMLElement) {
         lastFocusedCell = { x, y };
         cell.focus();
     }
-};
+}
 
-const isFocusable = (cell: Cell) => {
+function isFocusable(cell: Cell) {
     return !cell.clicked;
-};
+}
 
 const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'] as const;
 
-export const useKeyboardNavigation = ({
+export function useKeyboardNavigation({
     gameStatus,
     grid,
 }: {
-    gameStatus: GameStatus;
-    grid: Grid<Cell>;
-}) => {
+    gameStatus: GameStatus
+    grid: Grid<Cell>
+}) {
     useKey(
-        (e) => keys.includes(e.key as (typeof keys)[number]),
+        e => keys.includes(e.key as (typeof keys)[number]),
         (e) => {
-            if (gameStatus !== 'playing') return;
+            if (gameStatus !== 'playing')
+                return;
 
             const key = e.key as (typeof keys)[number];
 
             const last = getFocusedCell() ?? lastFocusedCell;
             if (!last) {
-                const first = grid.find((cell) => isFocusable(cell));
-                if (first) focus(first.coordinates);
+                const first = grid.find(cell => isFocusable(cell));
+                if (first)
+                    focus(first.coordinates);
                 return;
             }
 
@@ -64,10 +66,11 @@ export const useKeyboardNavigation = ({
             const cells = cellGetters[key]();
 
             const index = ['ArrowUp', 'ArrowLeft'].includes(key)
-                ? cells.reverse().findIndex((cell) => isFocusable(cell))
-                : cells.findIndex((cell) => isFocusable(cell));
+                ? cells.reverse().findIndex(cell => isFocusable(cell))
+                : cells.findIndex(cell => isFocusable(cell));
 
-            if (index === -1) return;
+            if (index === -1)
+                return;
 
             const coordinatesByKey = {
                 ArrowUp: { x: last.x, y: last.y - index - 1 },
@@ -79,4 +82,4 @@ export const useKeyboardNavigation = ({
             focus(coordinatesByKey[key]);
         },
     );
-};
+}

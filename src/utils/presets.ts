@@ -40,8 +40,9 @@ export type Preset = (typeof presetList)[number];
 export const presets = {
     list: presetList,
     get: (name: PresetName) => {
-        const preset = presets.list.find((preset) => preset.name === name);
-        if (!preset) throw new Error(`Preset ${name} not found`);
+        const preset = presets.list.find(preset => preset.name === name);
+        if (!preset)
+            throw new Error(`Preset ${name} not found`);
         return preset;
     },
 };

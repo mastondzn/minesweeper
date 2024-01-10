@@ -3,15 +3,15 @@ import { createContext, useContext, useEffect, useState } from 'react';
 type Theme = 'dark' | 'light';
 
 interface ThemeProviderProps {
-    children: React.ReactNode;
-    defaultTheme?: Theme;
-    storageKey?: string;
+    children: React.ReactNode
+    defaultTheme?: Theme
+    storageKey?: string
 }
 
 interface ThemeProviderState {
-    theme: Theme;
-    setTheme: (theme: Theme) => void;
-    toggleTheme: () => void;
+    theme: Theme
+    setTheme: (theme: Theme) => void
+    toggleTheme: () => void
 }
 
 const initialState: ThemeProviderState = {
@@ -45,7 +45,7 @@ export function ThemeProvider({
         },
         toggleTheme: () => {
             localStorage.setItem(storageKey, theme === 'dark' ? 'light' : 'dark');
-            setTheme((theme) => (theme === 'dark' ? 'light' : 'dark'));
+            setTheme(theme => (theme === 'dark' ? 'light' : 'dark'));
         },
     };
 
@@ -56,6 +56,6 @@ export function ThemeProvider({
     );
 }
 
-export const useTheme = () => {
+export function useTheme() {
     return useContext(ThemeProviderContext);
-};
+}
