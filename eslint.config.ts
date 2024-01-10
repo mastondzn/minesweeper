@@ -41,20 +41,7 @@ export default antfu(
         plugins: {
             // eslint-disable-next-line ts/no-unsafe-assignment
             unicorn,
-        },
-        rules: {
-            // eslint-disable-next-line ts/no-unsafe-member-access, ts/ban-types
-            ...(unicorn?.configs?.recommended?.rules as {}),
 
-            'unicorn/no-null': 'off',
-            'unicorn/prevent-abbreviations': 'off',
-            'unicorn/no-new-array': 'off',
-            'unicorn/no-nested-ternary': 'off',
-        },
-    },
-
-    {
-        plugins: {
             // eslint-disable-next-line ts/no-unsafe-assignment
             tailwindcss: tailwind,
         },
@@ -64,6 +51,14 @@ export default antfu(
             },
         },
         rules: {
+            // eslint-disable-next-line ts/no-unsafe-member-access, ts/ban-types
+            ...(unicorn?.configs?.recommended?.rules as {}),
+
+            'unicorn/no-null': 'off',
+            'unicorn/prevent-abbreviations': 'off',
+            'unicorn/no-new-array': 'off',
+            'unicorn/no-nested-ternary': 'off',
+
             // eslint-disable-next-line ts/no-unsafe-member-access, ts/ban-types
             ...(tailwind?.configs?.recommended?.rules as {}),
         },
