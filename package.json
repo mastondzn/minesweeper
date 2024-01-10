@@ -35,9 +35,7 @@
     },
     "devDependencies": {
         "@antfu/eslint-config": "^2.6.2",
-        "@eslint/eslintrc": "^3.0.0",
         "@sentry/vite-plugin": "^2.10.2",
-        "@types/eslint__eslintrc": "^2.1.1",
         "@types/node": "^20.10.5",
         "@types/ramda": "^0.29.9",
         "@types/react": "^18.2.43",
