@@ -17,9 +17,13 @@ export class Grid<T> {
         width: number;
         height: number;
     }) {
-        this.table = new Array(height)
+        this.table = Array.from({ length: height })
             .fill(null)
-            .map((_, y) => new Array(width).fill(null).map((_, x) => fill({ x, y })));
+            .map((_, y) =>
+                Array.from({ length: width })
+                    .fill(null)
+                    .map((_, x) => fill({ x, y })),
+            );
 
         this.width = width;
         this.height = height;

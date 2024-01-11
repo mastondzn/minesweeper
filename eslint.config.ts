@@ -2,12 +2,17 @@ import antfu, { renameRules } from '@antfu/eslint-config';
 import ts from '@typescript-eslint/eslint-plugin';
 import unicorn from 'eslint-plugin-unicorn';
 import tailwind from 'eslint-plugin-tailwindcss';
+import prettier from 'eslint-config-prettier';
 
-export default antfu(
+const config = antfu(
     // antfu config
     {
-        react: true,
         stylistic: false,
+        react: {
+            overrides: {
+                'react/prop-types': 'off',
+            },
+        },
 
         typescript: {
             tsconfigPath: ['./tsconfig.json', './tsconfig.node.json'],
@@ -38,10 +43,10 @@ export default antfu(
 
     // flat overrides
     {
+        files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
         plugins: {
             // eslint-disable-next-line ts/no-unsafe-assignment
             unicorn,
-
             // eslint-disable-next-line ts/no-unsafe-assignment
             tailwindcss: tailwind,
         },
@@ -51,16 +56,17 @@ export default antfu(
             },
         },
         rules: {
-            // eslint-disable-next-line ts/no-unsafe-member-access, ts/ban-types
-            ...(unicorn?.configs?.recommended?.rules as {}),
+            // eslint-disable-next-line ts/no-unsafe-member-access
+            ...(unicorn?.configs?.recommended?.rules as object),
+            // eslint-disable-next-line ts/no-unsafe-member-access
+            ...(tailwind?.configs?.recommended?.rules as object),
 
             'unicorn/no-null': 'off',
             'unicorn/prevent-abbreviations': 'off',
-            'unicorn/no-new-array': 'off',
             'unicorn/no-nested-ternary': 'off',
-
-            // eslint-disable-next-line ts/no-unsafe-member-access, ts/ban-types
-            ...(tailwind?.configs?.recommended?.rules as {}),
         },
     },
+    prettier as object,
 );
+
+export default config;

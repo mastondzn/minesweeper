@@ -91,6 +91,9 @@ devDependencies:
   eslint:
     specifier: npm:eslint-ts-patch@8.56.0-0
     version: /eslint-ts-patch@8.56.0-0
+  eslint-config-prettier:
+    specifier: ^9.1.0
+    version: 9.1.0(eslint-ts-patch@8.56.0-0)
   eslint-plugin-react:
     specifier: ^7.33.2
     version: 7.33.2(eslint-ts-patch@8.56.0-0)
@@ -3098,6 +3101,15 @@ packages:
     resolution: {integrity: sha512-PcBsqtd5QHEZH4ROvpnRN4EP0qcHh9voCCHgtyHxnJZHGspJREcZn7oPqRG/GfWt9m3C0fkC2l5CuBtMig2wXQ==}
     dependencies:
       parse-gitignore: 2.0.0
+    dev: true
+
+  /eslint-config-prettier@9.1.0(eslint-ts-patch@8.56.0-0):
+    resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
+    dependencies:
+      eslint: /eslint-ts-patch@8.56.0-0
     dev: true
 
   /eslint-import-resolver-node@0.3.9:
