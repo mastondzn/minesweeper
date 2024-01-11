@@ -5,8 +5,8 @@ import type { Cell, Coordinates } from './types';
 export function createGrid({ height, width, mines }: Preset): Grid<Cell> {
     const grid = new Grid<Cell>({
         fill: () => ({ type: 'empty', clicked: false, flagged: false }),
-        width,
-        height,
+        width: width,
+        height: height,
     });
 
     // populate mine

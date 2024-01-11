@@ -4,15 +4,9 @@ import unicorn from 'eslint-plugin-unicorn';
 import tailwind from 'eslint-plugin-tailwindcss';
 import prettier from 'eslint-config-prettier';
 
-const config = antfu(
-    // antfu config
+export default antfu(
     {
         stylistic: false,
-        react: {
-            overrides: {
-                'react/prop-types': 'off',
-            },
-        },
 
         typescript: {
             tsconfigPath: ['./tsconfig.json', './tsconfig.node.json'],
@@ -34,8 +28,12 @@ const config = antfu(
 
         javascript: {
             overrides: {
-                'object-shorthand': ['error', 'always'],
+                'object-shorthand': ['error', 'consistent-as-needed'],
             },
+        },
+
+        react: {
+            overrides: { 'react/prop-types': 'off' },
         },
 
         ignores: ['tailwind.config.js', 'postcss.config.js', '.prettierrc.cjs'],
@@ -46,7 +44,7 @@ const config = antfu(
         files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
         plugins: {
             // eslint-disable-next-line ts/no-unsafe-assignment
-            unicorn,
+            unicorn: unicorn,
             // eslint-disable-next-line ts/no-unsafe-assignment
             tailwindcss: tailwind,
         },
@@ -55,18 +53,17 @@ const config = antfu(
                 callees: ['cn', 'twc', 'twx'],
             },
         },
+        // eslint-disable-next-line ts/no-unsafe-assignment
         rules: {
             // eslint-disable-next-line ts/no-unsafe-member-access
-            ...(unicorn?.configs?.recommended?.rules as object),
+            ...unicorn.configs.recommended.rules,
             // eslint-disable-next-line ts/no-unsafe-member-access
-            ...(tailwind?.configs?.recommended?.rules as object),
+            ...tailwind.configs.recommended.rules,
 
             'unicorn/no-null': 'off',
             'unicorn/prevent-abbreviations': 'off',
             'unicorn/no-nested-ternary': 'off',
         },
     },
-    prettier as object,
+    prettier,
 );
-
-export default config;

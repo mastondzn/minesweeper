@@ -16,7 +16,7 @@ function resetGame(draft: Draft<Minesweeper>) {
 }
 
 export const useMinesweeper = create<Minesweeper>()((set) => ({
-    settings,
+    settings: settings,
     grid: createGrid(presets.get(settings.preset)),
     gameStatus: 'playing',
     startedAt: null,
