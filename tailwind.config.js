@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/prefer-module */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ['class'],
@@ -79,16 +81,17 @@ module.exports = {
     plugins: [
         require('tailwindcss-animate'),
         function ({ addUtilities, theme }) {
-            let backgroundImage = (color) =>
+            // eslint-disable-next-line unicorn/consistent-function-scoping
+            const backgroundImage = color =>
                 `repeating-linear-gradient(45deg, ${color}, ${color} 2px, transparent 2px, transparent 7px)`;
-            let colors = Object.entries(theme('backgroundColor')).filter(
+            const colors = Object.entries(theme('backgroundColor')).filter(
                 ([, value]) => typeof value === 'object' && (value[500] || value.DEFAULT),
             );
 
             addUtilities(
                 Object.fromEntries(
                     colors.map(([name, colors]) => {
-                        let stripeColor = colors?.[500] || colors['DEFAULT'];
+                        const stripeColor = colors?.[500] || colors.DEFAULT;
 
                         return [
                             `.bg-stripes-${name}`,
