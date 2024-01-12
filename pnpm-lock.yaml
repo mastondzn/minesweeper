@@ -100,9 +100,6 @@ devDependencies:
   eslint-plugin-react-refresh:
     specifier: ^0.4.5
     version: 0.4.5(eslint-ts-patch@8.56.0-0)
-  eslint-plugin-tailwindcss:
-    specifier: ^3.13.1
-    version: 3.13.1(tailwindcss@3.3.6)
   eslint-plugin-unicorn:
     specifier: ^50.0.1
     version: 50.0.1(eslint-ts-patch@8.56.0-0)
@@ -3293,17 +3290,6 @@ packages:
       resolve: 2.0.0-next.5
       semver: 6.3.1
       string.prototype.matchall: 4.0.10
-    dev: true
-
-  /eslint-plugin-tailwindcss@3.13.1(tailwindcss@3.3.6):
-    resolution: {integrity: sha512-2Nlgr9doO6vFAG9w4iGU0sspWXuzypfng10HTF+dFS2NterhweWtgdRvf/f7aaoOUUxVZM8wMIXzazrZ7CxyeA==}
-    engines: {node: '>=12.13.0'}
-    peerDependencies:
-      tailwindcss: ^3.3.2
-    dependencies:
-      fast-glob: 3.3.2
-      postcss: 8.4.32
-      tailwindcss: 3.3.6
     dev: true
 
   /eslint-plugin-toml@0.8.0(eslint-ts-patch@8.56.0-0):
