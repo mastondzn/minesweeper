@@ -7,7 +7,8 @@ export default defineConfig(
         },
 
         tailwindcss: {
-            callees: ['cn', 'twc', 'twx', 'clsx', 'classnames'],
+            callees: ['cn', 'clsx'],
+            tags: ['twx', 'twc'],
         },
 
         ignores: ['tailwind.config.js', 'postcss.config.js', '.prettierrc.cjs'],

@@ -34,7 +34,8 @@
         "zustand": "^4.4.7"
     },
     "devDependencies": {
-        "@mastondzn/eslint": "^0.4.0",
+        "@mastondzn/eslint": "^0.5.0",
+        "@mastondzn/eslint-plugin-tailwindcss": "^3.14.1",
         "@sentry/vite-plugin": "^2.10.2",
         "@types/node": "^20.10.5",
         "@types/ramda": "^0.29.9",
@@ -46,7 +47,6 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
-        "eslint-plugin-tailwindcss": "^3.13.1",
         "eslint-plugin-unicorn": "^50.0.1",
         "eslint-ts-patch": "8.56.0-0",
         "happy-dom": "^12.10.3",
