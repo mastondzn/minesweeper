@@ -15,14 +15,14 @@ function resetGame(draft: Draft<Minesweeper>) {
     draft.endedAt = null;
 }
 
-export const useMinesweeper = create<Minesweeper>()((set) => ({
-    settings: settings,
+export const useMinesweeper = create<Minesweeper>()(set => ({
+    settings,
     grid: createGrid(presets.get(settings.preset)),
     gameStatus: 'playing',
     startedAt: null,
     endedAt: null,
     reset: () => {
-        set((state) => produce(state, resetGame));
+        set(state => produce(state, resetGame));
     },
     choosePreset: (preset: PresetName) => {
         set((state) => {
@@ -36,11 +36,13 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
     },
     click: ({ x, y }) => {
         set((state) => {
-            if (state.gameStatus !== 'playing') return state;
+            if (state.gameStatus !== 'playing')
+                return state;
 
             return produce(state, (draft) => {
                 let cell = draft.grid.at({ x, y });
-                if (cell.flagged) return;
+                if (cell.flagged)
+                    return;
 
                 if (!draft.startedAt) {
                     draft.startedAt = new Date();
@@ -49,9 +51,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     const shouldRegenerate = (cell: Cell) => {
                         return directive === 'empty'
                             ? cell.type !== 'empty'
-                            : directive === 'numberOrEmpty'
-                              ? cell.type !== 'mine'
-                              : false;
+                            : (directive === 'numberOrEmpty'
+                                    ? cell.type !== 'mine'
+                                    : false);
                     };
 
                     while (shouldRegenerate(cell)) {
@@ -69,7 +71,8 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                     // @ts-expect-error see above
                     draft.endedAt = new Date();
                     return;
-                } else if (cell.type === 'empty') {
+                }
+                else if (cell.type === 'empty') {
                     updateNeighbors(draft.grid, { x, y });
                 }
 
@@ -84,13 +87,15 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
     },
     flag: ({ x, y }) => {
         set((state) => {
-            if (state.gameStatus !== 'playing') return state;
+            if (state.gameStatus !== 'playing')
+                return state;
 
             return produce(state, (draft) => {
                 const cell = draft.grid.at({ x, y });
 
                 // TODO: we can make the game not be based on luck here in the future
-                if (cell.clicked) return;
+                if (cell.clicked)
+                    return;
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {

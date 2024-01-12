@@ -24,12 +24,13 @@ function App() {
     } = useMinesweeper();
 
     useKeyboardNavigation({ gameStatus, grid });
-    useKey((e) => ['r', 'R'].includes(e.key), reset);
+    useKey(event => ['r', 'R'].includes(event.key), reset);
     useKey(
-        (e) => [...'123456789'].includes(e.key),
-        (e) => {
-            const preset = presets.list[Number.parseInt(e.key, 10) - 1]?.name;
-            if (preset) choosePreset(preset);
+        event => [...'123456789'].includes(event.key),
+        (event) => {
+            const preset = presets.list[Number.parseInt(event.key, 10) - 1]?.name;
+            if (preset)
+                choosePreset(preset);
         },
     );
 

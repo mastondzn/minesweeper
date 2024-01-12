@@ -6,12 +6,13 @@ import type { Cell, Coordinates, GameStatus } from './types';
 function getFocusedCell(): Coordinates | null {
     const coordinates = document.activeElement?.id
         .split(',')
-        .map((coord) => Number.parseInt(coord, 10));
+        .map(coord => Number.parseInt(coord, 10));
 
     const x = coordinates?.[0];
     const y = coordinates?.[1];
 
-    if (typeof x !== 'number' || typeof y !== 'number') return null;
+    if (typeof x !== 'number' || typeof y !== 'number')
+        return null;
 
     return { x, y };
 }
@@ -37,20 +38,22 @@ export function useKeyboardNavigation({
     gameStatus,
     grid,
 }: {
-    gameStatus: GameStatus;
-    grid: Grid<Cell>;
+    gameStatus: GameStatus
+    grid: Grid<Cell>
 }) {
     useKey(
-        (e) => keys.includes(e.key as (typeof keys)[number]),
-        (e) => {
-            if (gameStatus !== 'playing') return;
+        event => keys.includes(event.key as (typeof keys)[number]),
+        (event) => {
+            if (gameStatus !== 'playing')
+                return;
 
-            const key = e.key as (typeof keys)[number];
+            const key = event.key as (typeof keys)[number];
 
             const last = getFocusedCell() ?? lastFocusedCell;
             if (!last) {
-                const first = grid.find((cell) => isFocusable(cell));
-                if (first) focus(first.coordinates);
+                const first = grid.find(cell => isFocusable(cell));
+                if (first)
+                    focus(first.coordinates);
                 return;
             }
 
@@ -64,10 +67,11 @@ export function useKeyboardNavigation({
             const cells = cellGetters[key]();
 
             const index = ['ArrowUp', 'ArrowLeft'].includes(key)
-                ? cells.reverse().findIndex((cell) => isFocusable(cell))
-                : cells.findIndex((cell) => isFocusable(cell));
+                ? cells.reverse().findIndex(cell => isFocusable(cell))
+                : cells.findIndex(cell => isFocusable(cell));
 
-            if (index === -1) return;
+            if (index === -1)
+                return;
 
             const coordinatesByKey = {
                 ArrowUp: { x: last.x, y: last.y - index - 1 },

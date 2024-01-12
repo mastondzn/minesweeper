@@ -34,7 +34,7 @@
         "zustand": "^4.4.7"
     },
     "devDependencies": {
-        "@antfu/eslint-config": "^2.6.2",
+        "@mastondzn/eslint": "^0.4.0",
         "@sentry/vite-plugin": "^2.10.2",
         "@types/node": "^20.10.5",
         "@types/ramda": "^0.29.9",

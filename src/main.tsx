@@ -15,7 +15,8 @@ initializeSentry({
 });
 
 const root = document.querySelector('#root');
-if (!root) throw new Error('Root element not found');
+if (!root)
+    throw new Error('Root element not found');
 
 createRoot(root).render(
     <StrictMode>

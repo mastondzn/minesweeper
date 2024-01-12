@@ -16,12 +16,12 @@ export function GameCell({
     onClick,
     onContextMenu,
 }: {
-    cell: Cell;
-    coordinates: Coordinates;
-    gameStatus: GameStatus;
-    onClick: () => void;
-    onContextMenu: () => void;
-    grid: Grid<Cell>;
+    cell: Cell
+    coordinates: Coordinates
+    gameStatus: GameStatus
+    onClick: () => void
+    onContextMenu: () => void
+    grid: Grid<Cell>
 }) {
     const isNotTopRow = y !== 0;
     const isNotBottomRow = y !== grid.height - 1;
@@ -42,10 +42,11 @@ export function GameCell({
     const content = cell.flagged
         ? '🚩'
         : isRevealedBomb
-          ? '💣'
-          : isRevealedNumber
-            ? cell.value
-            : null;
+            ? '💣'
+            // eslint-disable-next-line unicorn/no-nested-ternary
+            : isRevealedNumber
+                ? cell.value
+                : null;
 
     const styles = cn(
         'select-none',
@@ -68,13 +69,15 @@ export function GameCell({
             id={`${x},${y}`}
             className={styles}
             onClick={onClick}
-            onContextMenu={(e) => {
-                e.preventDefault();
+            onContextMenu={(event) => {
+                event.preventDefault();
                 onContextMenu();
             }}
-            onKeyUp={(e) => {
-                if (['Enter', ' '].includes(e.key)) onClick();
-                if (['F', 'f'].includes(e.key)) onContextMenu();
+            onKeyUp={(event) => {
+                if (['Enter', ' '].includes(event.key))
+                    onClick();
+                if (['F', 'f'].includes(event.key))
+                    onContextMenu();
             }}
             tabIndex={isClickable ? 0 : undefined}
         >

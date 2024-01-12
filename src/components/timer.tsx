@@ -12,24 +12,26 @@ export function Timer({
     endedAt,
     gameStatus,
 }: {
-    onClick: () => void;
-    startedAt: Date | null;
-    endedAt: Date | null;
-    gameStatus: GameStatus;
+    onClick: () => void
+    startedAt: Date | null
+    endedAt: Date | null
+    gameStatus: GameStatus
 }) {
     const [milliseconds, setMilliseconds] = useState(0);
 
     useEffect(() => {
         if (startedAt && endedAt) {
             setMilliseconds(endedAt.getTime() - startedAt.getTime());
-        } else if (startedAt) {
+        }
+        else if (startedAt) {
             const interval = setInterval(() => {
                 setMilliseconds(Date.now() - startedAt.getTime());
             }, 100);
             return () => {
                 clearInterval(interval);
             };
-        } else {
+        }
+        else {
             setMilliseconds(0);
         }
     }, [startedAt, endedAt, gameStatus]);

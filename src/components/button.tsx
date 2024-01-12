@@ -33,20 +33,20 @@ export const buttonVariants = cva(
     },
 );
 
-export interface ButtonProps
+export interface ButtonProperties
     extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
-    asChild?: boolean;
+    VariantProps<typeof buttonVariants> {
+    asChild?: boolean
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant, size, asChild = false, ...props }, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
+    ({ className, variant, size, asChild = false, ...properties }, reference) => {
         const Comp = asChild ? Slot : 'button';
         return (
             <Comp
                 className={cn(buttonVariants({ variant, size, className }))}
-                ref={ref}
-                {...props}
+                ref={reference}
+                {...properties}
             />
         );
     },
@@ -74,11 +74,13 @@ export function BottomButtons() {
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark' ? (
-                    <IconMoon className="h-6 w-6" />
-                ) : (
-                    <IconSun className="h-6 w-6" />
-                )}
+                {theme === 'dark'
+                    ? (
+                        <IconMoon className="h-6 w-6" />
+                        )
+                    : (
+                        <IconSun className="h-6 w-6" />
+                        )}
             </Button>
         </div>
     );

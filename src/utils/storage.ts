@@ -5,8 +5,8 @@ import { z } from 'zod';
 import type { DeepPartial } from './types';
 
 function defineMeta<TSchema extends z.AnyZodObject>(meta: {
-    schema: TSchema;
-    default: z.infer<TSchema>;
+    schema: TSchema
+    default: z.infer<TSchema>
 }) {
     return meta;
 }
@@ -47,7 +47,8 @@ function get<TKey extends keyof typeof storageMeta>(
     const meta = storageMeta[key];
     const schema = withDefaults === false ? meta.schema.deepPartial() : meta.schema;
 
-    if (!raw) return withDefaults === false ? null : meta.default;
+    if (!raw)
+        return withDefaults === false ? null : meta.default;
 
     let parsed: z.infer<typeof schema>;
     try {
@@ -56,7 +57,8 @@ function get<TKey extends keyof typeof storageMeta>(
                 ? superjson.parse(raw)
                 : mergeDeep(meta.default, superjson.parse<object>(raw)),
         );
-    } catch (error) {
+    }
+    catch (error) {
         console.warn(error);
         throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
     }
@@ -74,7 +76,8 @@ function set<TKey extends keyof typeof storageMeta>(
 
     const after = mergeDeep(get(key, false) ?? {}, value);
 
-    if (!schema.safeParse(after).success) throw new Error(`Failed to validate ${key} with schema`);
+    if (!schema.safeParse(after).success)
+        throw new Error(`Failed to validate ${key} with schema`);
 
     // @ts-expect-error safe
     if (equals(meta.default, mergeDeep(meta.default, after)) as boolean) {
