@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from './button';
 import { cn } from '~/utils/tailwind';
-import { type GameStatus } from '~/utils/types';
+import type { GameStatus } from '~/utils/types';
 
 export function Timer({
     onClick,
@@ -12,24 +12,26 @@ export function Timer({
     endedAt,
     gameStatus,
 }: {
-    onClick: () => void;
-    startedAt: Date | null;
-    endedAt: Date | null;
-    gameStatus: GameStatus;
+    onClick: () => void
+    startedAt: Date | null
+    endedAt: Date | null
+    gameStatus: GameStatus
 }) {
     const [milliseconds, setMilliseconds] = useState(0);
 
     useEffect(() => {
         if (startedAt && endedAt) {
             setMilliseconds(endedAt.getTime() - startedAt.getTime());
-        } else if (startedAt) {
+        }
+        else if (startedAt) {
             const interval = setInterval(() => {
                 setMilliseconds(Date.now() - startedAt.getTime());
             }, 100);
             return () => {
                 clearInterval(interval);
             };
-        } else {
+        }
+        else {
             setMilliseconds(0);
         }
     }, [startedAt, endedAt, gameStatus]);
@@ -51,7 +53,7 @@ export function Timer({
     );
 }
 
-const customMs = (milliseconds: number) => {
+function customMs(milliseconds: number) {
     const raw = ms(milliseconds, {
         colonNotation: true,
         millisecondsDecimalDigits: 1,
@@ -59,4 +61,4 @@ const customMs = (milliseconds: number) => {
     });
 
     return raw.includes('.') ? raw : `${raw}.0`;
-};
+}

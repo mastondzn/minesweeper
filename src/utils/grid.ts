@@ -1,6 +1,6 @@
 import { immerable } from 'immer';
 
-import { type Coordinates } from './types';
+import type { Coordinates } from './types';
 
 export class Grid<T> {
     public table: T[][];
@@ -13,48 +13,58 @@ export class Grid<T> {
         width,
         height,
     }: {
-        fill: ({ x, y }: Coordinates) => T;
-        width: number;
-        height: number;
+        fill: ({ x, y }: Coordinates) => T
+        width: number
+        height: number
     }) {
-        this.table = new Array(height)
+        this.table = Array.from({ length: height })
             .fill(null)
-            .map((_, y) => new Array(width).fill(null).map((_, x) => fill({ x, y })));
+            .map((_, y) =>
+                Array.from({ length: width })
+                    .fill(null)
+                    .map((_, x) => fill({ x, y })),
+            );
 
         this.width = width;
         this.height = height;
     }
 
     *[Symbol.iterator]() {
-        for (const [y, row] of this.table.entries()) {
-            for (const [x, value] of row.entries()) {
-                yield { value, x, y };
-            }
-        }
+        for (const [y, row] of this.table.entries())
+            for (const [x, value] of row.entries()) yield { value, x, y };
     }
 
     *neighbors({ x, y }: Coordinates, diagonals = true) {
         for (const dy of [-1, 0, 1]) {
             for (const dx of [-1, 0, 1]) {
-                if (dx === 0 && dy === 0) continue;
-                if (!diagonals && dx !== 0 && dy !== 0) continue;
+                if (dx === 0 && dy === 0)
+                    continue;
+                if (!diagonals && dx !== 0 && dy !== 0)
+                    continue;
 
                 const neighbor = {
                     x: x + dx,
                     y: y + dy,
                 };
 
-                if (!this.isInBounds(neighbor)) continue;
+                if (!this.isInBounds(neighbor))
+                    continue;
 
                 let place = '';
 
-                if (dy === -1) place += 't';
-                if (dy === 0) place += 'm';
-                if (dy === 1) place += 'b';
+                if (dy === -1)
+                    place += 't';
+                if (dy === 0)
+                    place += 'm';
+                if (dy === 1)
+                    place += 'b';
 
-                if (dx === -1) place += 'l';
-                if (dx === 0) place += 'm';
-                if (dx === 1) place += 'r';
+                if (dx === -1)
+                    place += 'l';
+                if (dx === 0)
+                    place += 'm';
+                if (dx === 1)
+                    place += 'r';
 
                 yield {
                     value: this.at(neighbor),
@@ -67,12 +77,14 @@ export class Grid<T> {
 
     public at({ x, y }: Coordinates): T {
         const value = this.table[y]?.[x];
-        if (value === undefined) throw new Error(`Grid index out of bounds: ${x}, ${y}`);
+        if (value === undefined)
+            throw new Error(`Grid index out of bounds: ${x}, ${y}`);
         return value;
     }
 
     public set({ x, y }: Coordinates, value: T): void {
-        if (!this.isInBounds({ x, y })) throw new Error(`Grid index out of bounds: ${x}, ${y}`);
+        if (!this.isInBounds({ x, y }))
+            throw new Error(`Grid index out of bounds: ${x}, ${y}`);
         this.table[y]![x] = value;
     }
 
@@ -82,30 +94,35 @@ export class Grid<T> {
 
     public find(
         predicate: (value: T, coords: Coordinates) => unknown,
-    ): { value: T; coordinates: Coordinates } | null {
+    ): { value: T, coordinates: Coordinates } | null {
         for (const { value, x, y } of this) {
-            if (predicate(value, { x, y })) return { value, coordinates: { x, y } };
+            if (predicate(value, { x, y }))
+                return { value, coordinates: { x, y } };
         }
+
         return null;
     }
 
     public findReverse(
         predicate: (value: T, coords: Coordinates) => unknown,
-    ): { value: T; coordinates: Coordinates } | null {
+    ): { value: T, coordinates: Coordinates } | null {
         for (let y = this.table.length; y >= 0; y--) {
             const element = this.table[y];
-            if (!element) continue;
+            if (!element)
+                continue;
             for (let x = element.length; x >= 0; x--) {
                 const value = element[x];
-                if (!value) continue;
-                if (predicate(value, { x, y })) return { value, coordinates: { x, y } };
+                if (!value)
+                    continue;
+                if (predicate(value, { x, y }))
+                    return { value, coordinates: { x, y } };
             }
         }
         return null;
     }
 
     public getColumn(x: number): T[] {
-        return this.table.map((row) => row[x]!);
+        return this.table.map(row => row[x]!);
     }
 
     public getRow(y: number): T[] {
@@ -113,11 +130,11 @@ export class Grid<T> {
     }
 
     public getAbove({ x, y }: Coordinates): T[] {
-        return this.table.slice(0, y).map((row) => row[x]!);
+        return this.table.slice(0, y).map(row => row[x]!);
     }
 
     public getBelow({ x, y }: Coordinates): T[] {
-        return this.table.slice(y + 1).map((row) => row[x]!);
+        return this.table.slice(y + 1).map(row => row[x]!);
     }
 
     public getLeft({ x, y }: Coordinates): T[] {

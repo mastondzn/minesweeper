@@ -1,17 +1,17 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light';
 
-interface ThemeProviderProps {
-    children: React.ReactNode;
-    defaultTheme?: Theme;
-    storageKey?: string;
+interface ThemeProviderProperties {
+    children: React.ReactNode
+    defaultTheme?: Theme
+    storageKey?: string
 }
 
 interface ThemeProviderState {
-    theme: Theme;
-    setTheme: (theme: Theme) => void;
-    toggleTheme: () => void;
+    theme: Theme
+    setTheme: (theme: Theme) => void
+    toggleTheme: () => void
 }
 
 const initialState: ThemeProviderState = {
@@ -25,8 +25,8 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
     children,
     storageKey = 'vite-ui-theme',
-    ...props
-}: ThemeProviderProps) {
+    ...properties
+}: ThemeProviderProperties) {
     const [theme, setTheme] = useState<Theme>(
         () => (localStorage.getItem(storageKey) as Theme | null) ?? initialState.theme,
     );
@@ -45,17 +45,17 @@ export function ThemeProvider({
         },
         toggleTheme: () => {
             localStorage.setItem(storageKey, theme === 'dark' ? 'light' : 'dark');
-            setTheme((theme) => (theme === 'dark' ? 'light' : 'dark'));
+            setTheme(theme => (theme === 'dark' ? 'light' : 'dark'));
         },
     };
 
     return (
-        <ThemeProviderContext.Provider {...props} value={value}>
+        <ThemeProviderContext.Provider {...properties} value={value}>
             {children}
         </ThemeProviderContext.Provider>
     );
 }
 
-export const useTheme = () => {
+export function useTheme() {
     return useContext(ThemeProviderContext);
-};
+}

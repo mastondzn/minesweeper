@@ -2,14 +2,14 @@ import { equals, mergeDeepRight as mergeDeep } from 'ramda';
 import * as superjson from 'superjson';
 import { z } from 'zod';
 
-import { type DeepPartial } from './types';
+import type { DeepPartial } from './types';
 
-const defineMeta = <TSchema extends z.AnyZodObject>(meta: {
-    schema: TSchema;
-    default: z.infer<TSchema>;
-}) => {
+function defineMeta<TSchema extends z.AnyZodObject>(meta: {
+    schema: TSchema
+    default: z.infer<TSchema>
+}) {
     return meta;
-};
+}
 
 export const storageMeta = {
     settings: defineMeta({
@@ -47,9 +47,8 @@ function get<TKey extends keyof typeof storageMeta>(
     const meta = storageMeta[key];
     const schema = withDefaults === false ? meta.schema.deepPartial() : meta.schema;
 
-    if (!raw) {
+    if (!raw)
         return withDefaults === false ? null : meta.default;
-    }
 
     let parsed: z.infer<typeof schema>;
     try {
@@ -58,7 +57,8 @@ function get<TKey extends keyof typeof storageMeta>(
                 ? superjson.parse(raw)
                 : mergeDeep(meta.default, superjson.parse<object>(raw)),
         );
-    } catch (error) {
+    }
+    catch (error) {
         console.warn(error);
         throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
     }
@@ -74,12 +74,10 @@ function set<TKey extends keyof typeof storageMeta>(
     const meta = storageMeta[key];
     const schema = meta.schema.deepPartial();
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const after = mergeDeep(get(key, false) ?? {}, value);
 
-    if (!schema.safeParse(after).success) {
+    if (!schema.safeParse(after).success)
         throw new Error(`Failed to validate ${key} with schema`);
-    }
 
     // @ts-expect-error safe
     if (equals(meta.default, mergeDeep(meta.default, after)) as boolean) {
