@@ -16,8 +16,7 @@ export function Count({ grid, preset }: { grid: Grid<Cell>, preset: PresetName }
         <div className="flex flex-row items-center gap-4 rounded-md border-2 pl-3 pr-1.5">
             <p className="whitespace-nowrap text-center text-lg font-semibold tabular-nums">
                 {flagged}
-                {' '}
-                /
+                {` / `}
                 {mines}
                 {' '}
                 🚩
