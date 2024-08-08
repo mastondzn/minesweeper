@@ -22,24 +22,22 @@ export function createGrid({ height, width, mines }: Preset): Grid<Cell> {
 
     // populate mine counts
     for (const { value: cell, x, y } of grid) {
-        if (cell.type === 'mine')
-            continue;
+        if (cell.type === 'mine') continue;
 
         let mines = 0;
-        for (let index = -1; index <= 1; index++) {
-            for (let index_ = -1; index_ <= 1; index_++) {
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 // outside the grid
-                if (x + index_ < 0 || x + index_ >= width || y + index < 0 || y + index >= height)
+                if (x + j < 0 || x + j >= width || y + i < 0 || y + i >= height) {
                     continue;
+                }
 
-                const cell = grid.at({ x: x + index_, y: y + index });
-                if (cell.type === 'mine')
-                    mines++;
+                const cell = grid.at({ x: x + j, y: y + i });
+                if (cell.type === 'mine') mines++;
             }
         }
 
-        if (mines === 0)
-            continue;
+        if (mines === 0) continue;
         grid.set({ x, y }, { type: 'number', value: mines, clicked: false, flagged: false });
     }
 
@@ -68,8 +66,7 @@ export function updateNeighbors(grid: Grid<Cell>, { x, y }: Coordinates) {
 export function determineWinCondition(grid: Grid<Cell>) {
     // if every cell that is not a mine is visible, the player wins
     for (const { value: cell } of grid) {
-        if (!cell.clicked && cell.type !== 'mine')
-            return false;
+        if (!cell.clicked && cell.type !== 'mine') return false;
     }
 
     return true;

@@ -23,7 +23,7 @@ export const buttonVariants = cva(
                 default: 'h-10 px-4 py-2',
                 sm: 'h-9 rounded-md px-3',
                 lg: 'h-11 rounded-md px-8',
-                icon: 'h-10 w-10',
+                icon: 'size-10',
             },
         },
         defaultVariants: {
@@ -35,8 +35,8 @@ export const buttonVariants = cva(
 
 export interface ButtonProperties
     extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-    asChild?: boolean
+        VariantProps<typeof buttonVariants> {
+    asChild?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
@@ -58,29 +58,27 @@ export function BottomButtons() {
 
     return (
         <div className="flex flex-row gap-2">
-            <Button variant="outline" className="h-fit w-fit rounded-full border-2 p-3" asChild>
+            <Button variant="outline" className="size-fit rounded-full border-2 p-3" asChild>
                 <a
                     href="https://github.com/mastondzn/minesweeper"
                     target="_blank"
                     aria-label="Go to GitHub"
                     rel="noreferrer"
                 >
-                    <IconBrandGithub className="h-6 w-6" />
+                    <IconBrandGithub className="size-6" />
                 </a>
             </Button>
             <Button
                 variant="outline"
-                className="h-fit w-fit rounded-full border-2 p-3"
+                className="size-fit rounded-full border-2 p-3"
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark'
-                    ? (
-                        <IconMoon className="h-6 w-6" />
-                        )
-                    : (
-                        <IconSun className="h-6 w-6" />
-                        )}
+                {theme === 'dark' ? (
+                    <IconMoon className="size-6" />
+                ) : (
+                    <IconSun className="size-6" />
+                )}
             </Button>
         </div>
     );
