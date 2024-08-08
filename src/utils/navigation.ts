@@ -1,7 +1,7 @@
 import { useKey } from 'react-use';
 
-import type { Grid } from './grid';
-import type { Cell, Coordinates, GameStatus } from './types';
+import { store } from './minesweeper';
+import type { Cell, Coordinates } from './types';
 
 function getFocusedCell(): Coordinates | null {
     const coordinates = document.activeElement?.id
@@ -33,32 +33,28 @@ function isFocusable(cell: Cell) {
 
 const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'] as const;
 
-export function useKeyboardNavigation({
-    gameStatus,
-    grid,
-}: {
-    gameStatus: GameStatus;
-    grid: Grid<Cell>;
-}) {
+export function useKeyboardNavigation() {
     useKey(
         (event) => keys.includes(event.key as (typeof keys)[number]),
         (event) => {
-            if (gameStatus !== 'playing') return;
+            const { context } = store.getSnapshot();
+
+            if (context.gameStatus !== 'playing') return;
 
             const key = event.key as (typeof keys)[number];
 
             const last = getFocusedCell() ?? lastFocusedCell;
             if (!last) {
-                const first = grid.find((cell) => isFocusable(cell));
+                const first = context.grid.find((cell) => isFocusable(cell));
                 if (first) focus(first.coordinates);
                 return;
             }
 
             const cellGetters = {
-                ArrowUp: () => grid.getAbove(last),
-                ArrowDown: () => grid.getBelow(last),
-                ArrowRight: () => grid.getRight(last),
-                ArrowLeft: () => grid.getLeft(last),
+                ArrowUp: () => context.grid.getAbove(last),
+                ArrowDown: () => context.grid.getBelow(last),
+                ArrowRight: () => context.grid.getRight(last),
+                ArrowLeft: () => context.grid.getLeft(last),
             };
 
             const cells = cellGetters[key]();

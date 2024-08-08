@@ -3,32 +3,24 @@ import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 
 import { Button } from './button';
+import { store, useGame } from '~/utils/minesweeper';
 import { cn } from '~/utils/tailwind';
-import type { GameStatus } from '~/utils/types';
 
-export function Timer({
-    onClick,
-    startedAt,
-    endedAt,
-    gameStatus,
-}: {
-    onClick: () => void;
-    startedAt: Date | null;
-    endedAt: Date | null;
-    gameStatus: GameStatus;
-}) {
+export function Timer() {
     const [milliseconds, setMilliseconds] = useState(0);
+    const gameStatus = useGame((state) => state.context.gameStatus);
+    const startedAt = useGame((state) => state.context.startedAt);
+    const endedAt = useGame((state) => state.context.endedAt);
 
     useEffect(() => {
         if (startedAt && endedAt) {
             setMilliseconds(endedAt.getTime() - startedAt.getTime());
         } else if (startedAt) {
-            const interval = setInterval(() => {
-                setMilliseconds(Date.now() - startedAt.getTime());
-            }, 100);
-            return () => {
-                clearInterval(interval);
-            };
+            const interval = setInterval(
+                () => setMilliseconds(Date.now() - startedAt.getTime()),
+                100,
+            );
+            return () => clearInterval(interval);
         } else {
             setMilliseconds(0);
         }
@@ -43,7 +35,7 @@ export function Timer({
         <Button
             className="flex justify-between gap-2 bg-muted p-3"
             variant="secondary"
-            onClick={onClick}
+            onClick={() => store.send({ type: 'restart' })}
         >
             <IconRefresh className={className} />
             <div className={cn(className, 'text-lg tabular-nums')}>{customMs(milliseconds)}</div>

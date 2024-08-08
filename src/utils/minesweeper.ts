@@ -1,4 +1,4 @@
-import { createStoreWithProducer } from '@xstate/store';
+import { type SnapshotFromStore, createStoreWithProducer } from '@xstate/store';
 import { useSelector } from '@xstate/store/react';
 import { produce } from 'immer';
 
@@ -82,18 +82,6 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
     },
 );
 
-export function useGame() {
-    return useSelector(store, (state) => state.context);
-}
-
-export function useGameStatus() {
-    return useSelector(store, (state) => ({
-        gameStatus: state.context.gameStatus,
-        endedAt: state.context.endedAt,
-        startedAt: state.context.startedAt,
-    }));
-}
-
-export function usePreset() {
-    return useSelector(store, (state) => state.context.settings.preset);
+export function useGame<T>(selector: (snapshot: SnapshotFromStore<typeof store>) => T) {
+    return useSelector<typeof store, T>(store, selector);
 }

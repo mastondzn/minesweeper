@@ -2,6 +2,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import * as React from 'react';
 
+import { store, useGame } from '~/utils/minesweeper';
 import { type PresetName, presets } from '~/utils/presets';
 import { cn } from '~/utils/tailwind';
 
@@ -136,12 +137,16 @@ export const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-export function PresetPicker(properties: {
-    onValueChange: (value: PresetName) => void;
-    defaultValue: PresetName;
-}) {
+export function PresetPicker() {
+    const preset = useGame((state) => state.context.settings.preset);
+
     return (
-        <Select {...properties}>
+        <Select
+            defaultValue={preset}
+            onValueChange={(value) => {
+                store.send({ type: 'choosePreset', preset: value as PresetName });
+            }}
+        >
             <SelectTrigger className="w-[270px]" aria-label="Change minesweeper preset">
                 <SelectValue placeholder="Change preset" />
             </SelectTrigger>

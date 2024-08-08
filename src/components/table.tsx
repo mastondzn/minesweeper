@@ -1,5 +1,6 @@
 import { digitColors } from '~/utils/colors';
 import type { Grid } from '~/utils/grid';
+import { store, useGame } from '~/utils/minesweeper';
 import { cn, twx } from '~/utils/tailwind';
 import type { Cell, Coordinates, GameStatus } from '~/utils/types';
 
@@ -43,8 +44,7 @@ export function GameCell({
         ? '🚩'
         : isRevealedBomb
           ? '💣'
-          :  
-            isRevealedNumber
+          : isRevealedNumber
             ? cell.value
             : null;
 
@@ -81,5 +81,32 @@ export function GameCell({
         >
             {content}
         </TableCell>
+    );
+}
+
+export function Minefield() {
+    const grid = useGame((state) => state.context.grid);
+    const gameStatus = useGame((state) => state.context.gameStatus);
+
+    return (
+        <Table>
+            <TableBody>
+                {grid.table.map((row, y) => (
+                    <TableRow key={y}>
+                        {row.map((cell, x) => (
+                            <GameCell
+                                key={`${x},${y}`}
+                                cell={cell}
+                                coordinates={{ x, y }}
+                                gameStatus={gameStatus}
+                                onClick={() => store.send({ type: 'click', x, y })}
+                                onContextMenu={() => store.send({ type: 'flag', x, y })}
+                                grid={grid}
+                            />
+                        ))}
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
     );
 }
