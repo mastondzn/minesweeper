@@ -33,17 +33,14 @@ export type MinesweeperState = {
 
 export type GameStatus = MinesweeperState['gameStatus'];
 
-export interface MinesweeperActions {
-    click: ({ x, y }: Coordinates) => void;
-    flag: ({ x, y }: Coordinates) => void;
-    choosePreset: (preset: PresetName) => void;
-    reset: () => void;
-}
+// eslint-disable-next-line ts/consistent-type-definitions
+export type MinesweeperActions = {
+    click: Coordinates;
+    flag: Coordinates;
+    choosePreset: { preset: PresetName };
+    restart: Record<never, never>;
+};
 
 export type Minesweeper = MinesweeperState & MinesweeperActions;
 
-export type DeepPartial<T> = T extends object
-    ? {
-          [P in keyof T]?: DeepPartial<T[P]>;
-      }
-    : T;
+export type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;

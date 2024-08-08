@@ -1,4 +1,4 @@
-import { equals, mergeDeepRight as mergeDeep } from 'ramda';
+import { isDeepEqual, mergeDeep } from 'remeda';
 import * as superjson from 'superjson';
 import { z } from 'zod';
 
@@ -54,7 +54,7 @@ function get<TKey extends keyof typeof storageMeta>(
         parsed = schema.parse(
             withDefaults === false
                 ? superjson.parse(raw)
-                : mergeDeep(meta.default, superjson.parse<object>(raw)),
+                : mergeDeep(meta.default, superjson.parse<Record<string, unknown>>(raw)),
         );
     } catch (error) {
         console.warn(error);
@@ -77,7 +77,7 @@ function set<TKey extends keyof typeof storageMeta>(
     if (!schema.safeParse(after).success) throw new Error(`Failed to validate ${key} with schema`);
 
     // @ts-expect-error safe we know it's a valid schema
-    if (equals(meta.default, mergeDeep(meta.default, after)) as boolean) {
+    if (isDeepEqual(meta.default, mergeDeep(meta.default, after))) {
         localStorage.removeItem(key);
         return;
     }

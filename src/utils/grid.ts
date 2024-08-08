@@ -30,8 +30,11 @@ export class Grid<T> {
     }
 
     *[Symbol.iterator]() {
-        for (const [y, row] of this.table.entries())
-            for (const [x, value] of row.entries()) yield { value, x, y };
+        for (const [y, row] of this.table.entries()) {
+            for (const [x, value] of row.entries()) {
+                yield { value, x, y };
+            }
+        }
     }
 
     *neighbors({ x, y }: Coordinates, diagonals = true) {

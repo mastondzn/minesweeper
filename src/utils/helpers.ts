@@ -1,6 +1,6 @@
 import { Grid } from './grid';
-import type { Preset } from './presets';
-import type { Cell, Coordinates } from './types';
+import { type Preset, presets } from './presets';
+import type { Cell, Coordinates, MinesweeperState } from './types';
 
 export function createGrid({ height, width, mines }: Preset): Grid<Cell> {
     const grid = new Grid<Cell>({
@@ -70,4 +70,11 @@ export function determineWinCondition(grid: Grid<Cell>) {
     }
 
     return true;
+}
+
+export function restart(ctx: MinesweeperState) {
+    ctx.grid = createGrid(presets.get(ctx.settings.preset));
+    ctx.gameStatus = 'playing' as const;
+    ctx.startedAt = null;
+    ctx.endedAt = null;
 }

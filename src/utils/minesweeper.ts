@@ -1,106 +1,99 @@
-import { type Draft, produce } from 'immer';
-import { create } from 'zustand';
+import { createStoreWithProducer } from '@xstate/store';
+import { useSelector } from '@xstate/store/react';
+import { produce } from 'immer';
 
-import { createGrid, determineWinCondition, updateNeighbors } from './helpers';
+import { createGrid, determineWinCondition, restart, updateNeighbors } from './helpers';
 import { type PresetName, presets } from './presets';
 import { storage } from './storage';
-import type { Cell, Minesweeper } from './types';
+import type { Cell, MinesweeperActions, MinesweeperState } from './types';
 
 const settings = storage.get('settings');
 
-function resetGame(draft: Draft<Minesweeper>) {
-    draft.grid = createGrid(presets.get(draft.settings.preset));
-    draft.gameStatus = 'playing';
-    draft.startedAt = null;
-    draft.endedAt = null;
+export const store = createStoreWithProducer<MinesweeperState, MinesweeperActions>(
+    produce,
+    {
+        settings,
+        grid: createGrid(presets.get(settings.preset)),
+        gameStatus: 'playing',
+        startedAt: null,
+        endedAt: null,
+    },
+    {
+        restart: (ctx): void => restart(ctx),
+        choosePreset: (ctx, event: { preset: PresetName }): void => {
+            ctx.settings.preset = event.preset;
+            restart(ctx);
+        },
+        click: (ctx, { x, y }: { x: number; y: number }): void => {
+            if (ctx.gameStatus !== 'playing') return;
+
+            let cell = ctx.grid.at({ x, y });
+            if (cell.flagged) return;
+
+            if (!ctx.startedAt) {
+                ctx.startedAt = new Date();
+                const directive = ctx.settings.startDirective;
+
+                const shouldRegenerate = (cell: Cell) => {
+                    return directive === 'empty'
+                        ? cell.type !== 'empty'
+                        : directive === 'numberOrEmpty'
+                          ? cell.type !== 'mine'
+                          : false;
+                };
+
+                while (shouldRegenerate(cell)) {
+                    ctx.grid = createGrid(presets.get(ctx.settings.preset));
+                    cell = ctx.grid.at({ x, y });
+                }
+            }
+
+            cell.clicked = true;
+            if (cell.type === 'mine') {
+                Object.assign(ctx, { gameStatus: 'lost', endedAt: new Date() });
+                return;
+            } else if (cell.type === 'empty') {
+                updateNeighbors(ctx.grid, { x, y });
+            }
+
+            if (determineWinCondition(ctx.grid)) {
+                Object.assign(ctx, {
+                    gameStatus: 'won',
+                    endedAt: new Date(),
+                });
+            }
+        },
+        flag: (ctx, { x, y }: { x: number; y: number }): void => {
+            if (ctx.gameStatus !== 'playing') return;
+
+            const cell = ctx.grid.at({ x, y });
+
+            // TODO: we can make the game not be based on luck here in the future
+            if (cell.clicked) return;
+            cell.flagged = !cell.flagged;
+
+            if (determineWinCondition(ctx.grid)) {
+                // @ts-expect-error we cannot assign to draft directly and spread to please TS
+                ctx.gameStatus = 'won';
+                // @ts-expect-error we cannot assign to draft directly and spread to please TS
+                ctx.endedAt = new Date();
+            }
+        },
+    },
+);
+
+export function useGame() {
+    return useSelector(store, (state) => state.context);
 }
 
-export const useMinesweeper = create<Minesweeper>()((set) => ({
-    settings,
-    grid: createGrid(presets.get(settings.preset)),
-    gameStatus: 'playing',
-    startedAt: null,
-    endedAt: null,
-    reset: () => {
-        set((state) => produce(state, resetGame));
-    },
-    choosePreset: (preset: PresetName) => {
-        set((state) => {
-            storage.set('settings', { preset });
+export function useGameStatus() {
+    return useSelector(store, (state) => ({
+        gameStatus: state.context.gameStatus,
+        endedAt: state.context.endedAt,
+        startedAt: state.context.startedAt,
+    }));
+}
 
-            return produce(state, (draft) => {
-                draft.settings.preset = preset;
-                resetGame(draft);
-            });
-        });
-    },
-    click: ({ x, y }) => {
-        set((state) => {
-            if (state.gameStatus !== 'playing') return state;
-
-            return produce(state, (draft) => {
-                let cell = draft.grid.at({ x, y });
-                if (cell.flagged) return;
-
-                if (!draft.startedAt) {
-                    draft.startedAt = new Date();
-                    const directive = draft.settings.startDirective;
-
-                    const shouldRegenerate = (cell: Cell) => {
-                        return directive === 'empty'
-                            ? cell.type !== 'empty'
-                            : directive === 'numberOrEmpty'
-                              ? cell.type !== 'mine'
-                              : false;
-                    };
-
-                    while (shouldRegenerate(cell)) {
-                        draft.grid = createGrid(presets.get(draft.settings.preset));
-                        cell = draft.grid.at({ x, y });
-                    }
-                }
-
-                cell.clicked = true;
-                if (cell.type === 'mine') {
-                    //
-                    // https://immerjs.github.io/immer/pitfalls#dont-reassign-the-recipe-argument
-
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.gameStatus = 'lost';
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.endedAt = new Date();
-                    return;
-                } else if (cell.type === 'empty') {
-                    updateNeighbors(draft.grid, { x, y });
-                }
-
-                if (determineWinCondition(draft.grid)) {
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.gameStatus = 'won';
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.endedAt = new Date();
-                }
-            });
-        });
-    },
-    flag: ({ x, y }) => {
-        set((state) => {
-            if (state.gameStatus !== 'playing') return state;
-
-            return produce(state, (draft) => {
-                const cell = draft.grid.at({ x, y });
-
-                // TODO: we can make the game not be based on luck here in the future
-                if (cell.clicked) return;
-                cell.flagged = !cell.flagged;
-
-                if (determineWinCondition(draft.grid)) {
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.gameStatus = 'won';
-                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                    draft.endedAt = new Date();
-                }
-            });
-        });
-    },
-}));
+export function usePreset() {
+    return useSelector(store, (state) => state.context.settings.preset);
+}
