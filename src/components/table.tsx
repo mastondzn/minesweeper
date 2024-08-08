@@ -6,7 +6,7 @@ import type { Cell, Coordinates, GameStatus } from '~/utils/types';
 export const Table = twx.table`border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted`;
 export const TableBody = twx.tbody``;
 export const TableRow = twx.tr``;
-export const TableCell = twx.td`h-10 min-h-[40px] w-10 min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
+export const TableCell = twx.td`size-10 min-h-[40px] min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
 
 export function GameCell({
     cell,
@@ -43,7 +43,7 @@ export function GameCell({
         ? '🚩'
         : isRevealedBomb
           ? '💣'
-          : // eslint-disable-next-line unicorn/no-nested-ternary
+          :  
             isRevealedNumber
             ? cell.value
             : null;

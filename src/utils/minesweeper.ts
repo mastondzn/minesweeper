@@ -62,11 +62,12 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
 
                 cell.clicked = true;
                 if (cell.type === 'mine') {
-                    // we cannot assign to draft and spread to please TS (see below)
+                    //
                     // https://immerjs.github.io/immer/pitfalls#dont-reassign-the-recipe-argument
-                    // @ts-expect-error see above
+
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.gameStatus = 'lost';
-                    // @ts-expect-error see above
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.endedAt = new Date();
                     return;
                 } else if (cell.type === 'empty') {
@@ -74,9 +75,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                 }
 
                 if (determineWinCondition(draft.grid)) {
-                    // @ts-expect-error see above
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.gameStatus = 'won';
-                    // @ts-expect-error see above
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.endedAt = new Date();
                 }
             });
@@ -94,9 +95,9 @@ export const useMinesweeper = create<Minesweeper>()((set) => ({
                 cell.flagged = !cell.flagged;
 
                 if (determineWinCondition(draft.grid)) {
-                    // @ts-expect-error see above
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.gameStatus = 'won';
-                    // @ts-expect-error see above
+                    // @ts-expect-error we cannot assign to draft directly and spread to please TS
                     draft.endedAt = new Date();
                 }
             });

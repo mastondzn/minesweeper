@@ -1,6 +1,4 @@
 import * as superjson from 'superjson';
-
-// this import leaks node global types, fun
 import { describe, expect, it } from 'vitest';
 
 import { storage, storageMeta } from '~/utils/storage';

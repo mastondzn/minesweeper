@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prefer-module */
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ['class'],
@@ -82,7 +80,7 @@ module.exports = {
         require('tailwindcss-animate'),
         function ({ addUtilities, theme }) {
             // eslint-disable-next-line unicorn/consistent-function-scoping
-            const backgroundImage = color =>
+            const backgroundImage = (color) =>
                 `repeating-linear-gradient(45deg, ${color}, ${color} 2px, transparent 2px, transparent 7px)`;
             const colors = Object.entries(theme('backgroundColor')).filter(
                 ([, value]) => typeof value === 'object' && (value[500] || value.DEFAULT),

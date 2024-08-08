@@ -61,7 +61,7 @@ function get<TKey extends keyof typeof storageMeta>(
         throw new Error(`Failed to json parse ${key} from localStorage, (value: ${raw})`);
     }
 
-    // @ts-expect-error safe
+    // @ts-expect-error safe, we know it's a valid schema
     return parsed;
 }
 
@@ -76,7 +76,7 @@ function set<TKey extends keyof typeof storageMeta>(
 
     if (!schema.safeParse(after).success) throw new Error(`Failed to validate ${key} with schema`);
 
-    // @ts-expect-error safe
+    // @ts-expect-error safe we know it's a valid schema
     if (equals(meta.default, mergeDeep(meta.default, after)) as boolean) {
         localStorage.removeItem(key);
         return;
