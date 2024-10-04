@@ -3,11 +3,12 @@ import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
 
 import { Button } from './button';
-import { store, useGame } from '~/utils/minesweeper';
+import { store, useGame } from '~/utils/game';
 import { cn } from '~/utils/tailwind';
 
 export function Timer() {
     const [milliseconds, setMilliseconds] = useState(0);
+
     const gameStatus = useGame((state) => state.context.gameStatus);
     const startedAt = useGame((state) => state.context.startedAt);
     const endedAt = useGame((state) => state.context.endedAt);
@@ -24,12 +25,12 @@ export function Timer() {
         } else {
             setMilliseconds(0);
         }
-    }, [startedAt, endedAt, gameStatus]);
+    }, [startedAt, endedAt]);
 
-    const className = cn(
-        gameStatus === 'lost' && 'text-red-500 dark:text-red-400',
-        gameStatus === 'won' && 'text-green-500 dark:text-green-400',
-    );
+    const styles = cn({
+        'text-red-500 dark:text-red-400': gameStatus === 'lost',
+        'text-green-500 dark:text-green-400': gameStatus === 'won',
+    });
 
     return (
         <Button
@@ -37,18 +38,13 @@ export function Timer() {
             variant="secondary"
             onClick={() => store.send({ type: 'restart' })}
         >
-            <IconRefresh className={className} />
-            <div className={cn(className, 'text-lg tabular-nums')}>{customMs(milliseconds)}</div>
+            <IconRefresh className={styles} />
+            <div className={cn(styles, 'text-lg tabular-nums')}>
+                {ms(milliseconds, {
+                    colonNotation: true,
+                    keepDecimalsOnWholeSeconds: true,
+                })}
+            </div>
         </Button>
     );
-}
-
-function customMs(milliseconds: number) {
-    const raw = ms(milliseconds, {
-        colonNotation: true,
-        millisecondsDecimalDigits: 1,
-        secondsDecimalDigits: 1,
-    });
-
-    return raw.includes('.') ? raw : `${raw}.0`;
 }

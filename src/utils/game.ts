@@ -22,9 +22,10 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
         restart: (ctx): void => restart(ctx),
         choosePreset: (ctx, event: { preset: PresetName }): void => {
             ctx.settings.preset = event.preset;
+            storage.set('settings', { preset: event.preset });
             restart(ctx);
         },
-        click: (ctx, { x, y }: { x: number; y: number }): void => {
+        click: (ctx, { x, y }): void => {
             if (ctx.gameStatus !== 'playing') return;
 
             let cell = ctx.grid.at({ x, y });
@@ -50,38 +51,35 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
 
             cell.clicked = true;
             if (cell.type === 'mine') {
-                Object.assign(ctx, { gameStatus: 'lost', endedAt: new Date() });
+                // @ts-expect-error due to union type ts doesn't know we assign both
+                ctx.gameStatus = 'lost';
+                // @ts-expect-error due to union type ts doesn't know we assign both
+                ctx.endedAt = new Date();
                 return;
             } else if (cell.type === 'empty') {
                 updateNeighbors(ctx.grid, { x, y });
             }
 
             if (determineWinCondition(ctx.grid)) {
-                Object.assign(ctx, {
-                    gameStatus: 'won',
-                    endedAt: new Date(),
-                });
+                // @ts-expect-error due to union type ts doesn't know we assign both
+                ctx.gameStatus = 'won';
+                // @ts-expect-error due to union type ts doesn't know we assign both
+                ctx.endedAt = new Date();
             }
         },
-        flag: (ctx, { x, y }: { x: number; y: number }): void => {
-            if (ctx.gameStatus !== 'playing') return;
+        flag: (ctx, { x, y }): void => {
+            if (ctx.gameStatus !== 'playing' || !ctx.startedAt) return;
 
             const cell = ctx.grid.at({ x, y });
 
-            // TODO: we can make the game not be based on luck here in the future
-            if (cell.clicked) return;
-            cell.flagged = !cell.flagged;
-
-            if (determineWinCondition(ctx.grid)) {
-                // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                ctx.gameStatus = 'won';
-                // @ts-expect-error we cannot assign to draft directly and spread to please TS
-                ctx.endedAt = new Date();
-            }
+            if (!cell.clicked) cell.flagged = !cell.flagged;
         },
     },
 );
 
-export function useGame<T>(selector: (snapshot: SnapshotFromStore<typeof store>) => T) {
-    return useSelector<typeof store, T>(store, selector);
+export function useGame<T>(
+    selector: (snapshot: SnapshotFromStore<typeof store>) => T,
+    compare?: (a: T | undefined, b: T) => boolean,
+) {
+    return useSelector<typeof store, T>(store, selector, compare);
 }

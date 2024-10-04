@@ -1,8 +1,8 @@
-import { useGame } from '~/utils/minesweeper';
+import { useGame } from '~/utils/game';
 import { presets } from '~/utils/presets';
 
 export function Count() {
-    const preset = useGame((state) => state.context.settings.preset);
+    const mines = useGame((state) => presets.get(state.context.settings.preset).mines);
     const flagged = useGame((state) => {
         let flagged = 0;
 
@@ -12,8 +12,6 @@ export function Count() {
 
         return flagged;
     });
-
-    const { mines } = presets.get(preset);
 
     return (
         <div className="flex flex-row items-center gap-4 rounded-md border-2 pl-3 pr-1.5">

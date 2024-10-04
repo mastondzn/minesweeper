@@ -1,33 +1,35 @@
-import { digitColors } from '~/utils/colors';
-import type { Grid } from '~/utils/grid';
-import { store, useGame } from '~/utils/minesweeper';
+import confetti from 'canvas-confetti';
+import { useEffect, useRef } from 'react';
+import { isDeepEqual } from 'remeda';
+
+import { store, useGame } from '~/utils/game';
 import { cn, twx } from '~/utils/tailwind';
-import type { Cell, Coordinates, GameStatus } from '~/utils/types';
+import type { Coordinates } from '~/utils/types';
 
 export const Table = twx.table`border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted`;
 export const TableBody = twx.tbody``;
 export const TableRow = twx.tr``;
-export const TableCell = twx.td`size-10 min-h-[40px] min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
+export const TableCell = twx.td`size-[40px] min-h-[40px] min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
 
-export function GameCell({
-    cell,
-    coordinates: { x, y },
-    grid,
-    gameStatus,
-    onClick,
-    onContextMenu,
-}: {
-    cell: Cell;
-    coordinates: Coordinates;
-    gameStatus: GameStatus;
-    onClick: () => void;
-    onContextMenu: () => void;
-    grid: Grid<Cell>;
-}) {
+const digitColors: Record<number, string> = {
+    1: 'text-blue-700 dark:text-blue-400',
+    2: 'text-green-700 dark:text-green-400',
+    3: 'text-red-700 dark:text-red-400',
+    4: 'text-orange-700 dark:text-orange-400',
+    5: 'text-yellow-700 dark:text-yellow-400',
+    6: 'text-teal-700 dark:text-teal-400',
+    7: 'text-fuchsia-700 dark:text-fuchsia-400',
+    8: 'text-emerald-700 dark:text-emerald-400',
+};
+
+export function GameCell({ coordinates: { x, y } }: { coordinates: Coordinates }) {
+    const gameStatus = useGame((state) => state.context.gameStatus);
+    const cell = useGame((state) => state.context.grid.at({ x, y }), isDeepEqual);
+
     const isNotTopRow = y !== 0;
-    const isNotBottomRow = y !== grid.height - 1;
+    const isNotBottomRow = useGame((state) => y !== state.context.grid.height - 1);
     const isNotLeftColumn = x !== 0;
-    const isNotRightColumn = x !== grid.width - 1;
+    const isNotRightColumn = useGame((state) => x !== state.context.grid.width - 1);
 
     const isClickable = !cell.clicked && gameStatus === 'playing';
     const isRevealed = cell.clicked || gameStatus !== 'playing';
@@ -49,64 +51,62 @@ export function GameCell({
             : null;
 
     const styles = cn(
-        'select-none',
+        {
+            'border-t border-muted': isNotTopRow,
+            'border-b border-muted': isNotBottomRow,
+            'border-l border-muted': isNotLeftColumn,
+            'border-r border-muted': isNotRightColumn,
 
-        isNotTopRow && 'border-t border-muted',
-        isNotBottomRow && 'border-b border-muted',
-        isNotLeftColumn && 'border-l border-muted',
-        isNotRightColumn && 'border-r border-muted',
+            'cursor-pointer hover:bg-muted/50 focus:bg-muted/50 active:bg-muted/50': isClickable,
 
-        isClickable && 'cursor-pointer hover:bg-muted/50 focus:bg-muted/50 active:bg-muted/50',
+            'bg-muted/50': isRevealedEmpty,
+            'bg-rose-200 dark:bg-rose-950': isRevealedBomb && !isWrongfullyClicked,
+            'bg-rose-400 dark:bg-rose-700': isWrongfullyFlagged || isWrongfullyClicked,
+            'bg-emerald-400 dark:bg-emerald-700': isTruthfullyFlagged,
+        },
         isRevealedNumber && `bg-muted/30 ${digitColors[cell.value]}`,
-        isRevealedEmpty && 'bg-muted/50',
-        isRevealedBomb && !isWrongfullyClicked && 'bg-rose-200 dark:bg-rose-950',
-        (isWrongfullyFlagged || isWrongfullyClicked) && 'bg-rose-400 dark:bg-rose-700',
-        isTruthfullyFlagged && 'bg-emerald-400 dark:bg-emerald-700',
+        'select-none',
     );
+
+    const previousGameStatus = useRef(gameStatus);
+    useEffect(() => {
+        previousGameStatus.current = gameStatus;
+    }, [gameStatus]);
 
     return (
         <TableCell
             id={`${x},${y}`}
             className={styles}
-            onClick={onClick}
+            tabIndex={isClickable ? 0 : undefined}
+            onClick={({ clientX, clientY }) => {
+                store.send({ type: 'click', x, y });
+
+                if (
+                    store.getSnapshot().context.gameStatus === 'won' &&
+                    previousGameStatus.current !== 'won'
+                ) {
+                    void confetti({
+                        particleCount: 100,
+                        startVelocity: 20,
+                        gravity: 0.5,
+                        spread: 360,
+                        origin: {
+                            x: clientX / window.innerWidth,
+                            y: clientY / window.innerHeight,
+                        },
+                    });
+                }
+            }}
             onContextMenu={(event) => {
                 event.preventDefault();
-                onContextMenu();
+                store.send({ type: 'flag', x, y });
             }}
             onKeyUp={(event) => {
-                if (['Enter', ' '].includes(event.key)) onClick();
-                if (['F', 'f'].includes(event.key)) onContextMenu();
+                if (['Enter', ' '].includes(event.key)) store.send({ type: 'click', x, y });
+                if (['F', 'f'].includes(event.key)) store.send({ type: 'flag', x, y });
             }}
-            tabIndex={isClickable ? 0 : undefined}
         >
             {content}
         </TableCell>
-    );
-}
-
-export function Minefield() {
-    const grid = useGame((state) => state.context.grid);
-    const gameStatus = useGame((state) => state.context.gameStatus);
-
-    return (
-        <Table>
-            <TableBody>
-                {grid.table.map((row, y) => (
-                    <TableRow key={y}>
-                        {row.map((cell, x) => (
-                            <GameCell
-                                key={`${x},${y}`}
-                                cell={cell}
-                                coordinates={{ x, y }}
-                                gameStatus={gameStatus}
-                                onClick={() => store.send({ type: 'click', x, y })}
-                                onContextMenu={() => store.send({ type: 'flag', x, y })}
-                                grid={grid}
-                            />
-                        ))}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
     );
 }

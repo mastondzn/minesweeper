@@ -1,6 +1,6 @@
 import { useKey } from 'react-use';
 
-import { store } from './minesweeper';
+import { store } from './game';
 import type { Cell, Coordinates } from './types';
 
 function getFocusedCell(): Coordinates | null {
@@ -21,7 +21,7 @@ let lastFocusedCell: Coordinates | null = null;
 function focus({ x, y }: Coordinates) {
     // eslint-disable-next-line unicorn/prefer-query-selector
     const cell = document.getElementById(`${x},${y}`);
-    if (cell instanceof HTMLElement) {
+    if (cell) {
         lastFocusedCell = { x, y };
         cell.focus();
     }
@@ -50,14 +50,12 @@ export function useKeyboardNavigation() {
                 return;
             }
 
-            const cellGetters = {
+            const cells = {
                 ArrowUp: () => context.grid.getAbove(last),
                 ArrowDown: () => context.grid.getBelow(last),
                 ArrowRight: () => context.grid.getRight(last),
                 ArrowLeft: () => context.grid.getLeft(last),
-            };
-
-            const cells = cellGetters[key]();
+            }[key]();
 
             const index = ['ArrowUp', 'ArrowLeft'].includes(key)
                 ? cells.reverse().findIndex((cell) => isFocusable(cell))
@@ -65,14 +63,14 @@ export function useKeyboardNavigation() {
 
             if (index === -1) return;
 
-            const coordinatesByKey = {
+            const coordinates = {
                 ArrowUp: { x: last.x, y: last.y - index - 1 },
                 ArrowDown: { x: last.x, y: last.y + index + 1 },
                 ArrowLeft: { x: last.x - index - 1, y: last.y },
                 ArrowRight: { x: last.x + index + 1, y: last.y },
-            };
+            }[key];
 
-            focus(coordinatesByKey[key]);
+            focus(coordinates);
         },
     );
 }

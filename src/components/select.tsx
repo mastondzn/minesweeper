@@ -2,7 +2,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import * as React from 'react';
 
-import { store, useGame } from '~/utils/minesweeper';
+import { store, useGame } from '~/utils/game';
 import { type PresetName, presets } from '~/utils/presets';
 import { cn } from '~/utils/tailwind';
 
@@ -142,7 +142,7 @@ export function PresetPicker() {
 
     return (
         <Select
-            defaultValue={preset}
+            value={preset}
             onValueChange={(value) => {
                 store.send({ type: 'choosePreset', preset: value as PresetName });
             }}

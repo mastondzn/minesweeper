@@ -1,12 +1,11 @@
 import { useKey } from 'react-use';
 
 import { BottomButtons } from './components/button';
-import { Confetti } from './components/confetti';
 import { Count } from './components/counts';
 import { PresetPicker } from './components/select';
-import { Minefield } from './components/table';
+import { GameCell, Table, TableBody, TableRow } from './components/table';
 import { Timer } from './components/timer';
-import { store } from './utils/minesweeper';
+import { store, useGame } from './utils/game';
 import { useKeyboardNavigation } from './utils/navigation';
 import { presets } from './utils/presets';
 
@@ -24,9 +23,11 @@ function App() {
         },
     );
 
+    const width = useGame((state) => presets.get(state.context.settings.preset).width);
+    const height = useGame((state) => presets.get(state.context.settings.preset).height);
+
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
-            <Confetti />
             <div className="m-4 mx-auto flex flex-col items-center justify-center gap-4">
                 <div className="flex w-full flex-row justify-between gap-4">
                     <div className="flex flex-row items-center gap-4">
@@ -35,7 +36,17 @@ function App() {
                     </div>
                     <Count />
                 </div>
-                <Minefield />
+                <Table>
+                    <TableBody>
+                        {Array.from({ length: height }).map((_, y) => (
+                            <TableRow key={y}>
+                                {Array.from({ length: width }).map((_, x) => (
+                                    <GameCell key={`${x},${y}`} coordinates={{ x, y }} />
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
                 <BottomButtons />
             </div>
         </div>

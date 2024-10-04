@@ -6,7 +6,7 @@ import type { DeepPartial } from './types';
 
 function defineMeta<TSchema extends z.AnyZodObject>(meta: {
     schema: TSchema;
-    default: z.infer<TSchema>;
+    default: z.infer<NoInfer<TSchema>>;
 }) {
     return meta;
 }
