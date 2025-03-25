@@ -1,10 +1,9 @@
-import { defineConfig } from '@mastondzn/eslint';
+import { maston } from '@mastondzn/eslint';
 
-export default defineConfig({
-    stylistic: false,
-
+export default maston({
     typescript: {
-        tsconfigPath: ['./tsconfig.json', './tsconfig.node.json'],
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
     },
 
     tailwindcss: {
@@ -14,7 +13,6 @@ export default defineConfig({
     },
 
     rules: {
-        'unicorn/prevent-abbreviations': 'off',
         'react/prop-types': 'off',
     },
 });

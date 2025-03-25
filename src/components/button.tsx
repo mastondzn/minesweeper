@@ -1,7 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
-import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
+import { TbBrandGithub, TbMoon, TbSun } from 'react-icons/tb';
 
 import { useTheme } from './theme-provider';
 import { cn } from '~/utils/tailwind';
@@ -39,22 +39,27 @@ export interface ButtonProperties
     asChild?: boolean;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
-    ({ className, variant, size, asChild = false, ...properties }, ref) => {
-        const Comp = asChild ? Slot : 'button';
-        return (
-            <Comp
-                className={cn(buttonVariants({ variant, size, className }))}
-                ref={ref}
-                {...properties}
-            />
-        );
-    },
-);
+export function Button({
+    ref,
+    className,
+    variant,
+    size,
+    asChild = false,
+    ...properties
+}: ButtonProperties & { ref?: React.RefObject<HTMLButtonElement | null> }) {
+    const Comp = asChild ? Slot : 'button';
+    return (
+        <Comp
+            className={cn(buttonVariants({ variant, size, className }))}
+            ref={ref}
+            {...properties}
+        />
+    );
+}
 Button.displayName = 'Button';
 
 export function BottomButtons() {
-    const { toggleTheme, theme } = useTheme();
+    const { setTheme, theme } = useTheme();
 
     return (
         <div className="flex flex-row gap-2">
@@ -65,20 +70,16 @@ export function BottomButtons() {
                     aria-label="Go to GitHub"
                     rel="noreferrer"
                 >
-                    <IconBrandGithub className="size-6" />
+                    <TbBrandGithub className="size-6" />
                 </a>
             </Button>
             <Button
                 variant="outline"
                 className="size-fit rounded-full border-2 p-3"
-                onClick={toggleTheme}
+                onClick={setTheme.bind(null, theme === 'dark' ? 'light' : 'dark')}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark' ? (
-                    <IconMoon className="size-6" />
-                ) : (
-                    <IconSun className="size-6" />
-                )}
+                {theme === 'dark' ? <TbMoon className="size-6" /> : <TbSun className="size-6" />}
             </Button>
         </div>
     );

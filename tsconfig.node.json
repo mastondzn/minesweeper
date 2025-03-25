@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
         "composite": true,
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-
-        "types": ["node"],
+        "lib": ["es2022"],
+        "module": "preserve",
+        "types": ["@types/node"],
+        "strict": true,
         "strictNullChecks": true,
+        "noImplicitOverride": true,
+        "noUncheckedIndexedAccess": true,
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true
     },

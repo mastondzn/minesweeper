@@ -2,9 +2,9 @@ import confetti from 'canvas-confetti';
 import { useEffect, useRef } from 'react';
 import { isDeepEqual } from 'remeda';
 
+import type { Coordinates } from '~/utils/types';
 import { store, useGame } from '~/utils/game';
 import { cn, twx } from '~/utils/tailwind';
-import type { Coordinates } from '~/utils/types';
 
 export const Table = twx.table`border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted`;
 export const TableBody = twx.tbody``;

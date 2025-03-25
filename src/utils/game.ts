@@ -2,27 +2,29 @@ import { type SnapshotFromStore, createStoreWithProducer } from '@xstate/store';
 import { useSelector } from '@xstate/store/react';
 import { produce } from 'immer';
 
+import type { Cell, MinesweeperActions, MinesweeperState } from './types';
 import { createGrid, determineWinCondition, restart, updateNeighbors } from './helpers';
 import { type PresetName, presets } from './presets';
 import { storage } from './storage';
-import type { Cell, MinesweeperActions, MinesweeperState } from './types';
 
 const settings = storage.get('settings');
 
-export const store = createStoreWithProducer<MinesweeperState, MinesweeperActions>(
-    produce,
-    {
+// eslint-disable-next-line ts/no-empty-object-type
+export const store = createStoreWithProducer<MinesweeperState, MinesweeperActions, {}>(produce, {
+    context: {
         settings,
         grid: createGrid(presets.get(settings.preset)),
         gameStatus: 'playing',
         startedAt: null,
         endedAt: null,
     },
-    {
+    on: {
         restart: (ctx): void => restart(ctx),
         choosePreset: (ctx, event: { preset: PresetName }): void => {
             ctx.settings.preset = event.preset;
-            storage.set('settings', { preset: event.preset });
+            storage.update('settings', (settings) => {
+                settings.preset = event.preset;
+            });
             restart(ctx);
         },
         click: (ctx, { x, y }): void => {
@@ -75,7 +77,7 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
             if (!cell.clicked) cell.flagged = !cell.flagged;
         },
     },
-);
+});
 
 export function useGame<T>(
     selector: (snapshot: SnapshotFromStore<typeof store>) => T,

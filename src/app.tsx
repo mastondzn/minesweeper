@@ -16,7 +16,7 @@ function App() {
         () => store.send({ type: 'restart' }),
     );
     useKey(
-        (event) => [...'123456789'].includes(event.key),
+        (event) => '123456789'.split('').includes(event.key),
         (event) => {
             const preset = presets.list[Number.parseInt(event.key, 10) - 1]?.name;
             if (preset) store.send({ type: 'choosePreset', preset });

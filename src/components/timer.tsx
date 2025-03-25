@@ -1,6 +1,6 @@
-import { IconRefresh } from '@tabler/icons-react';
 import ms from 'pretty-ms';
 import { useEffect, useState } from 'react';
+import { TbRefresh } from 'react-icons/tb';
 
 import { Button } from './button';
 import { store, useGame } from '~/utils/game';
@@ -38,7 +38,7 @@ export function Timer() {
             variant="secondary"
             onClick={() => store.send({ type: 'restart' })}
         >
-            <IconRefresh className={styles} />
+            <TbRefresh className={cn(styles, 'size-6')} />
             <div className={cn(styles, 'text-lg tabular-nums')}>
                 {ms(milliseconds, {
                     colonNotation: true,

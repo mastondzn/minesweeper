@@ -1,38 +1,24 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'dark' | 'light';
-
-interface ThemeProviderProperties {
-    children: React.ReactNode;
-    defaultTheme?: Theme;
-    storageKey?: string;
-}
+import { type Theme, storage } from '~/utils/storage';
 
 interface ThemeProviderState {
     theme: Theme;
     setTheme: (theme: Theme) => void;
-    toggleTheme: () => void;
 }
 
 const initialState: ThemeProviderState = {
-    theme: 'dark',
+    theme: storage.get('theme'),
     setTheme: () => null,
-    toggleTheme: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-export function ThemeProvider({
-    children,
-    storageKey = 'vite-ui-theme',
-    ...properties
-}: ThemeProviderProperties) {
-    const [theme, setTheme] = useState<Theme>(
-        () => (localStorage.getItem(storageKey) as Theme | null) ?? initialState.theme,
-    );
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [theme, setTheme] = useState<Theme>(() => storage.get('theme'));
 
     useEffect(() => {
-        const root = window.document.documentElement;
+        const root = globalThis.document.documentElement;
         root.classList.remove('light', 'dark');
         root.classList.add(theme);
     }, [theme]);
@@ -40,22 +26,15 @@ export function ThemeProvider({
     const value = {
         theme,
         setTheme: (theme: Theme) => {
-            localStorage.setItem(storageKey, theme);
+            storage.set('theme', theme);
             setTheme(theme);
-        },
-        toggleTheme: () => {
-            localStorage.setItem(storageKey, theme === 'dark' ? 'light' : 'dark');
-            setTheme((theme) => (theme === 'dark' ? 'light' : 'dark'));
         },
     };
 
-    return (
-        <ThemeProviderContext.Provider {...properties} value={value}>
-            {children}
-        </ThemeProviderContext.Provider>
-    );
+    return <ThemeProviderContext value={value}>{children}</ThemeProviderContext>;
 }
 
 export function useTheme() {
-    return useContext(ThemeProviderContext);
+    const context = useContext(ThemeProviderContext);
+    return context;
 }

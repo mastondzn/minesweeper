@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-non-null-assertion */
 import { immerable } from 'immer';
 
 import type { Coordinates } from './types';
@@ -132,20 +133,4 @@ export class Grid<T> {
     public getRight({ x, y }: Coordinates): T[] {
         return this.table[y]!.slice(x + 1);
     }
-
-    // subgrid({ from, to }: { from: Coordinates; to: Coordinates }): Grid<T> {
-    //     const width = to.x - from.x + 1;
-    //     const height = to.y - from.y + 1;
-
-    //     return new Grid({
-    //         width,
-    //         height,
-    //         fill: (coords) => {
-    //             return this.at({
-    //                 x: coords.x + from.x,
-    //                 y: coords.y + from.y,
-    //             });
-    //         },
-    //     });
-    // }
 }

@@ -1,7 +1,7 @@
 import { useKey } from 'react-use';
 
-import { store } from './game';
 import type { Cell, Coordinates } from './types';
+import { store } from './game';
 
 function getFocusedCell(): Coordinates | null {
     const coordinates = document.activeElement?.id

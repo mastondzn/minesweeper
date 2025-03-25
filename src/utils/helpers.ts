@@ -1,6 +1,6 @@
+import type { Cell, Coordinates, MinesweeperState } from './types';
 import { Grid } from './grid';
 import { type Preset, presets } from './presets';
-import type { Cell, Coordinates, MinesweeperState } from './types';
 
 export function createGrid({ height, width, mines }: Preset): Grid<Cell> {
     const grid = new Grid<Cell>({

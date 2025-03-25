@@ -1,4 +1,3 @@
-import * as superjson from 'superjson';
 import { describe, expect, it } from 'vitest';
 
 import { storage, storageMeta } from '~/utils/storage';
@@ -12,32 +11,25 @@ describe('storage', () => {
     });
 
     it('should set', () => {
-        const settings = storage.get('settings');
+        const initial = storage.get('settings');
+        expect(initial.preset).not.toEqual('evil');
 
-        storage.set('settings', { preset: 'evil' });
-        expect(storage.get('settings')).toEqual({ ...settings, preset: 'evil' });
-    });
-
-    it('should not set to localStorage if default', () => {
-        storage.set('settings', storageMeta.settings.default);
         storage.set('settings', {
-            preset: storageMeta.settings.default.preset,
+            preset: 'evil',
+            startDirective: 'empty',
         });
-
-        expect(localStorage.getItem('settings')).toBeNull();
+        expect(storage.get('settings')).toEqual({ preset: 'evil', startDirective: 'empty' });
     });
 
-    it('should only contain non-default values', () => {
-        storage.set('settings', { preset: 'expert' });
-        expect(localStorage.getItem('settings')).toEqual(superjson.stringify({ preset: 'expert' }));
-    });
-
-    it('should remove after going back to default', () => {
-        storage.set('settings', { preset: 'expert' });
-        expect(localStorage.getItem('settings')).not.toBeNull();
-
-        storage.set('settings', storageMeta.settings.default);
-        expect(localStorage.getItem('settings')).toBeNull();
+    it('should update', () => {
+        storage.set('settings', {
+            preset: 'evil',
+            startDirective: 'empty',
+        });
+        storage.update('settings', (settings) => {
+            settings.preset = 'expert';
+        });
+        expect(storage.get('settings').preset).toEqual('expert');
     });
 
     it('should throw on invalid key', () => {

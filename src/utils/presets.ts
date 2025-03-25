@@ -26,6 +26,7 @@ const presetList = (
         },
     ] as const
 ).map((preset) => {
+    // eslint-disable-next-line ts/no-non-null-assertion
     const capitalized = preset.name[0]!.toUpperCase() + preset.name.slice(1);
 
     return {
