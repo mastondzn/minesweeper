@@ -36,7 +36,6 @@ export type Theme = z.infer<typeof storageMeta.theme.schema>;
 function get<TKey extends keyof typeof storageMeta>(
     key: TKey,
 ): z.infer<(typeof storageMeta)[TKey]['schema']> {
-    // TODO: handle this better, if we change the schema and the user still has old schema this will fail
     const raw = localStorage.getItem(key);
     const meta = storageMeta[key];
 
@@ -48,9 +47,14 @@ function get<TKey extends keyof typeof storageMeta>(
     try {
         parsed = meta.schema.parse(superjson.parse(raw));
     } catch (error) {
-        throw new Error(`Failed to parse ${key} from localStorage, (value: ${raw})`, {
-            cause: error,
-        });
+        console.error(
+            new Error(`Failed to parse ${key} from localStorage, (value: ${raw})`, {
+                cause: error,
+            }),
+        );
+        localStorage.removeItem(key);
+        localStorage.setItem(`_${key}_error_${Math.floor(Math.random() * 1000)}`, raw);
+        return meta.default;
     }
 
     return parsed;
