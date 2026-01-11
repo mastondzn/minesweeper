@@ -1,6 +1,6 @@
 import { produce } from 'immer';
-import * as superjson from 'superjson';
-import { z } from 'zod';
+import { parse, stringify } from 'superjson';
+import * as z from 'zod';
 
 function defineMeta<TSchema extends z.ZodType>(meta: {
     schema: TSchema;
@@ -43,17 +43,18 @@ function get<TKey extends keyof typeof storageMeta>(
         return meta.default;
     }
 
-    let parsed: z.infer<(typeof storageMeta)[TKey]['schema']>;
+    let parsed;
     try {
-        parsed = meta.schema.parse(superjson.parse(raw));
+        parsed = meta.schema.parse(parse(raw));
     } catch (error) {
+        const newKey = `_${key}_error_${Math.floor(Math.random() * 1000)}`;
         console.error(
-            new Error(`Failed to parse ${key} from localStorage, (value: ${raw})`, {
+            new Error(`Failed to parse ${key} from localStorage, setting key ${newKey} as backup`, {
                 cause: error,
             }),
         );
         localStorage.removeItem(key);
-        localStorage.setItem(`_${key}_error_${Math.floor(Math.random() * 1000)}`, raw);
+        localStorage.setItem(newKey, raw);
         return meta.default;
     }
 
@@ -70,7 +71,7 @@ function set<TKey extends keyof typeof storageMeta>(
         throw new Error(`Failed to validate ${key} with schema`);
     }
 
-    localStorage.setItem(key, superjson.stringify(value));
+    localStorage.setItem(key, stringify(value));
 }
 
 function update<TKey extends keyof typeof storageMeta>(

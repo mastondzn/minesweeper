@@ -32,6 +32,9 @@ importers:
       pretty-ms:
         specifier: ^9.2.0
         version: 9.2.0
+      pure-rand:
+        specifier: ^7.0.1
+        version: 7.0.1
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -2836,6 +2839,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-rand@7.0.1:
+    resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
 
   quansync@0.2.10:
     resolution: {integrity: sha512-t41VRkMYbkHyCYmOvx/6URnN80H7k4X0lLdBMGsz+maAwrJQYB1djpV6vHrQIBE0WBSGqhtEHrK9U3DWWH8v7A==}
@@ -6419,6 +6425,8 @@ snapshots:
       parse-ms: 4.0.0
 
   punycode@2.3.1: {}
+
+  pure-rand@7.0.1: {}
 
   quansync@0.2.10: {}
 

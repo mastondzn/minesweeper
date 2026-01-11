@@ -3,8 +3,8 @@ import { useSelector } from '@xstate/store/react';
 import { produce } from 'immer';
 
 import type { Cell, MinesweeperActions, MinesweeperState } from './types';
-import { createGrid, determineWinCondition, restart, updateNeighbors } from './helpers';
-import { type PresetName, presets } from './presets';
+import { createGrid, determineWinCondition, updateNeighbors } from './helpers';
+import { presets } from './presets';
 import { storage } from './storage';
 
 const settings = storage.get('settings');
@@ -20,14 +20,14 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
     },
     on: {
         restart: (ctx): void => restart(ctx),
-        choosePreset: (ctx, event: { preset: PresetName }): void => {
+        choosePreset: (ctx, event) => {
             ctx.settings.preset = event.preset;
             storage.update('settings', (settings) => {
                 settings.preset = event.preset;
             });
             restart(ctx);
         },
-        click: (ctx, { x, y }): void => {
+        click: (ctx, { x, y }) => {
             if (ctx.gameStatus !== 'playing') return;
 
             let cell = ctx.grid.at({ x, y });
@@ -69,15 +69,22 @@ export const store = createStoreWithProducer<MinesweeperState, MinesweeperAction
                 ctx.endedAt = new Date();
             }
         },
-        flag: (ctx, { x, y }): void => {
+        flag: (ctx, { x, y }) => {
             if (ctx.gameStatus !== 'playing' || !ctx.startedAt) return;
-
             const cell = ctx.grid.at({ x, y });
-
-            if (!cell.clicked) cell.flagged = !cell.flagged;
+            if (!cell.clicked) {
+                cell.flagged = !cell.flagged;
+            }
         },
     },
 });
+
+function restart(ctx: MinesweeperState) {
+    ctx.grid = createGrid(presets.get(ctx.settings.preset));
+    ctx.gameStatus = 'playing' as const;
+    ctx.startedAt = null;
+    ctx.endedAt = null;
+}
 
 export function useGame<T>(
     selector: (snapshot: SnapshotFromStore<typeof store>) => T,

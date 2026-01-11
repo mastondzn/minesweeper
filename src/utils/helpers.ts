@@ -1,19 +1,29 @@
-import type { Cell, Coordinates, MinesweeperState } from './types';
-import { Grid } from './grid';
-import { type Preset, presets } from './presets';
+import { unsafeUniformIntDistribution, xoroshiro128plus } from 'pure-rand';
 
-export function createGrid({ height, width, mines }: Preset): Grid<Cell> {
+import type { Preset } from './presets';
+import type { Cell, Coordinates } from './types';
+import { Grid } from './grid';
+
+export function createGrid(
+    { height, width, mines }: Preset,
+    seed = Date.now() ^ (Math.random() * 0x1_00_00_00_00),
+): Grid<Cell> {
     const grid = new Grid<Cell>({
         fill: () => ({ type: 'empty', clicked: false, flagged: false }),
         width,
         height,
     });
 
+    const rng = xoroshiro128plus(seed);
+    function random(max: number) {
+        return unsafeUniformIntDistribution(0, max - 1, rng);
+    }
+
     // populate mine
     let insertedMines = 0;
     while (insertedMines < mines) {
-        const x = Math.floor(Math.random() * width);
-        const y = Math.floor(Math.random() * height);
+        const x = random(width);
+        const y = random(height);
         if (grid.at({ x, y }).type === 'empty') {
             grid.set({ x, y }, { type: 'mine', clicked: false, flagged: false });
             insertedMines++;
@@ -70,11 +80,4 @@ export function determineWinCondition(grid: Grid<Cell>) {
     }
 
     return true;
-}
-
-export function restart(ctx: MinesweeperState) {
-    ctx.grid = createGrid(presets.get(ctx.settings.preset));
-    ctx.gameStatus = 'playing' as const;
-    ctx.startedAt = null;
-    ctx.endedAt = null;
 }

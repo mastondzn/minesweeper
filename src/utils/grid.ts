@@ -104,7 +104,9 @@ export class Grid<T> {
             for (let x = element.length; x >= 0; x--) {
                 const value = element[x];
                 if (!value) continue;
-                if (predicate(value, { x, y })) return { value, coordinates: { x, y } };
+                if (predicate(value, { x, y })) {
+                    return { value, coordinates: { x, y } };
+                }
             }
         }
         return null;
