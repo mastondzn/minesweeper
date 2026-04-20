@@ -1,13 +1,13 @@
 import { Slot } from '@radix-ui/react-slot';
+import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react';
 import { type VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
-import { TbBrandGithub, TbMoon, TbSun } from 'react-icons/tb';
 
 import { useTheme } from './theme-provider';
 import { cn } from '~/utils/tailwind';
 
 export const buttonVariants = cva(
-    'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+    'inline-flex items-center justify-center rounded-md text-sm font-medium whitespace-nowrap ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
     {
         variants: {
             variant: {
@@ -70,7 +70,7 @@ export function BottomButtons() {
                     aria-label="Go to GitHub"
                     rel="noreferrer"
                 >
-                    <TbBrandGithub className="size-6" />
+                    <IconBrandGithub className="size-6" />
                 </a>
             </Button>
             <Button
@@ -79,7 +79,11 @@ export function BottomButtons() {
                 onClick={setTheme.bind(null, theme === 'dark' ? 'light' : 'dark')}
                 aria-label="Toggle theme"
             >
-                {theme === 'dark' ? <TbMoon className="size-6" /> : <TbSun className="size-6" />}
+                {theme === 'dark' ? (
+                    <IconMoon className="size-6" />
+                ) : (
+                    <IconSun className="size-6" />
+                )}
             </Button>
         </div>
     );

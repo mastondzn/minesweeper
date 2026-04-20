@@ -7,9 +7,7 @@ import { store, useGame } from '~/utils/game';
 import { cn, twx } from '~/utils/tailwind';
 
 export const Table = twx.table`border-separate border-spacing-0 overflow-hidden rounded-xl border-2 border-muted`;
-export const TableBody = twx.tbody``;
-export const TableRow = twx.tr``;
-export const TableCell = twx.td`size-[40px] min-h-[40px] min-w-[40px] text-center align-middle text-lg font-extrabold transition-colors`;
+export const TableCell = twx.td`size-10 min-h-10 min-w-10 text-center align-middle text-lg font-extrabold transition-colors`;
 
 const digitColors: Record<number, string> = {
     1: 'text-blue-700 dark:text-blue-400',
@@ -68,9 +66,9 @@ export function GameCell({ coordinates: { x, y } }: { coordinates: Coordinates }
         'select-none',
     );
 
-    const previousGameStatus = useRef(gameStatus);
+    const previousGameStatusRef = useRef(gameStatus);
     useEffect(() => {
-        previousGameStatus.current = gameStatus;
+        previousGameStatusRef.current = gameStatus;
     }, [gameStatus]);
 
     return (
@@ -83,7 +81,7 @@ export function GameCell({ coordinates: { x, y } }: { coordinates: Coordinates }
 
                 if (
                     store.getSnapshot().context.gameStatus === 'won' &&
-                    previousGameStatus.current !== 'won'
+                    previousGameStatusRef.current !== 'won'
                 ) {
                     void confetti({
                         particleCount: 100,

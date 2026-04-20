@@ -7,12 +7,7 @@ export default maston({
     },
 
     tailwindcss: {
-        callees: ['cn', 'clsx', 'cva'],
-        tags: ['twx', 'twc'],
-        config: 'tailwind.config.cjs',
-    },
-
-    rules: {
-        'react/prop-types': 'off',
+        entryPoint: './src/index.css',
+        messageStyle: 'compact',
     },
 });

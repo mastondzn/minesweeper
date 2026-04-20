@@ -3,7 +3,7 @@ import { useKey } from 'react-use';
 import { BottomButtons } from './components/button';
 import { Count } from './components/counts';
 import { PresetPicker } from './components/select';
-import { GameCell, Table, TableBody, TableRow } from './components/table';
+import { GameCell, Table } from './components/table';
 import { Timer } from './components/timer';
 import { store, useGame } from './utils/game';
 import { useKeyboardNavigation } from './utils/navigation';
@@ -23,8 +23,7 @@ function App() {
         },
     );
 
-    const width = useGame((state) => presets.get(state.context.settings.preset).width);
-    const height = useGame((state) => presets.get(state.context.settings.preset).height);
+    const grid = useGame((state) => state.context.grid);
 
     return (
         <div className="mx-auto flex min-h-screen flex-col items-center justify-center">
@@ -37,15 +36,15 @@ function App() {
                     <Count />
                 </div>
                 <Table>
-                    <TableBody>
-                        {Array.from({ length: height }).map((_, y) => (
-                            <TableRow key={y}>
-                                {Array.from({ length: width }).map((_, x) => (
-                                    <GameCell key={`${x},${y}`} coordinates={{ x, y }} />
+                    <tbody>
+                        {grid.table.map((row, y) => (
+                            <tr key={row[0]?.id ?? y}>
+                                {row.map((cell, x) => (
+                                    <GameCell key={cell.id} coordinates={{ x, y }} />
                                 ))}
-                            </TableRow>
+                            </tr>
                         ))}
-                    </TableBody>
+                    </tbody>
                 </Table>
                 <BottomButtons />
             </div>

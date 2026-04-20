@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
-        "target": "es2022",
+        "target": "es2025",
         "jsx": "react-jsx",
-        "lib": ["es2022", "DOM", "DOM.Iterable"],
+        "lib": ["es2025", "DOM", "DOM.Iterable"],
         "useDefineForClassFields": true,
-        "baseUrl": ".",
         "module": "preserve",
         "paths": {
             "~/*": ["./src/*"]
@@ -22,6 +21,5 @@
         "isolatedModules": true,
         "skipLibCheck": true
     },
-    "references": [{ "path": "./tsconfig.node.json" }],
     "include": ["src", "tests"]
 }

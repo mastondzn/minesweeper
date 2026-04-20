@@ -4,7 +4,7 @@ import * as z from 'zod';
 
 function defineMeta<TSchema extends z.ZodType>(meta: {
     schema: TSchema;
-    default: z.infer<NoInfer<TSchema>>;
+    default: z.output<NoInfer<TSchema>>;
 }) {
     return meta;
 }
@@ -21,26 +21,26 @@ export const storageMeta = {
         },
     }),
     theme: defineMeta({
-        schema: z.enum(['light', 'dark']),
+        schema: z.literal(['light', 'dark']),
         default: 'dark',
     }),
 } as const;
 
 export type StorageTypes = {
-    [K in keyof typeof storageMeta]: z.infer<(typeof storageMeta)[K]['schema']>;
+    [K in keyof typeof storageMeta]: z.output<(typeof storageMeta)[K]['schema']>;
 };
 
-export type Settings = z.infer<typeof storageMeta.settings.schema>;
-export type Theme = z.infer<typeof storageMeta.theme.schema>;
+export type Settings = z.output<typeof storageMeta.settings.schema>;
+export type Theme = z.output<typeof storageMeta.theme.schema>;
 
 function get<TKey extends keyof typeof storageMeta>(
     key: TKey,
-): z.infer<(typeof storageMeta)[TKey]['schema']> {
+): z.output<(typeof storageMeta)[TKey]['schema']> {
     const raw = localStorage.getItem(key);
     const meta = storageMeta[key];
 
     if (!raw) {
-        return meta.default;
+        return meta.default as z.output<(typeof storageMeta)[TKey]['schema']>;
     }
 
     let parsed;
@@ -55,17 +55,17 @@ function get<TKey extends keyof typeof storageMeta>(
         );
         localStorage.removeItem(key);
         localStorage.setItem(newKey, raw);
-        return meta.default;
+        return meta.default as z.output<(typeof storageMeta)[TKey]['schema']>;
     }
 
-    return parsed;
+    return parsed as z.output<(typeof storageMeta)[TKey]['schema']>;
 }
 
 function set<TKey extends keyof typeof storageMeta>(
     key: TKey,
-    value: z.infer<(typeof storageMeta)[TKey]['schema']>,
+    value: z.output<(typeof storageMeta)[TKey]['schema']>,
 ): void {
-    const meta = storageMeta[key];
+    const meta = storageMeta[key] as (typeof storageMeta)[TKey];
 
     if (!meta.schema.safeParse(value).success) {
         throw new Error(`Failed to validate ${key} with schema`);
@@ -76,9 +76,9 @@ function set<TKey extends keyof typeof storageMeta>(
 
 function update<TKey extends keyof typeof storageMeta>(
     key: TKey,
-    updater: (value: z.infer<(typeof storageMeta)[TKey]['schema']>) => void,
+    updater: (value: z.output<(typeof storageMeta)[TKey]['schema']>) => void,
 ): void {
-    set(key, produce(get(key), updater));
+    set(key, produce(get(key), updater) as z.output<(typeof storageMeta)[TKey]['schema']>);
 }
 
 export const storage = { get, set, update };

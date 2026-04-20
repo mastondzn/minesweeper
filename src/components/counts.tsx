@@ -14,8 +14,8 @@ export function Count() {
     });
 
     return (
-        <div className="flex flex-row items-center gap-4 rounded-md border-2 pl-3 pr-1.5">
-            <p className="whitespace-nowrap text-center text-lg font-semibold tabular-nums">
+        <div className="flex flex-row items-center gap-4 rounded-md border-2 pr-1.5 pl-3">
+            <p className="text-center text-lg font-semibold whitespace-nowrap tabular-nums">
                 {`${flagged} / ${mines} 🚩`}
             </p>
         </div>

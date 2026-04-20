@@ -13,6 +13,7 @@ export type Cell = (
 ) & {
     flagged: boolean;
     clicked: boolean;
+    id: string;
 };
 
 export type MinesweeperState = {

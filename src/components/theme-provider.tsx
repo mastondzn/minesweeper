@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 
 import { type Theme, storage } from '~/utils/storage';
 
@@ -35,5 +35,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme() {
-    return useContext(ThemeProviderContext);
+    return use(ThemeProviderContext);
 }

@@ -1,4 +1,5 @@
-import { unsafeUniformIntDistribution, xoroshiro128plus } from 'pure-rand';
+import { uniformInt } from 'pure-rand/distribution/uniformInt';
+import { xoroshiro128plus } from 'pure-rand/generator/xoroshiro128plus';
 
 import type { Preset } from './presets';
 import type { Cell, Coordinates } from './types';
@@ -9,14 +10,14 @@ export function createGrid(
     seed = Date.now() ^ (Math.random() * 0x1_00_00_00_00),
 ): Grid<Cell> {
     const grid = new Grid<Cell>({
-        fill: () => ({ type: 'empty', clicked: false, flagged: false }),
+        fill: () => ({ type: 'empty', clicked: false, flagged: false, id: crypto.randomUUID() }),
         width,
         height,
     });
 
     const rng = xoroshiro128plus(seed);
     function random(max: number) {
-        return unsafeUniformIntDistribution(0, max - 1, rng);
+        return uniformInt(rng, 0, max - 1);
     }
 
     // populate mine
@@ -25,7 +26,8 @@ export function createGrid(
         const x = random(width);
         const y = random(height);
         if (grid.at({ x, y }).type === 'empty') {
-            grid.set({ x, y }, { type: 'mine', clicked: false, flagged: false });
+            const { id } = grid.at({ x, y });
+            grid.set({ x, y }, { type: 'mine', clicked: false, flagged: false, id });
             insertedMines++;
         }
     }
@@ -48,7 +50,8 @@ export function createGrid(
         }
 
         if (mines === 0) continue;
-        grid.set({ x, y }, { type: 'number', value: mines, clicked: false, flagged: false });
+        const { id } = grid.at({ x, y });
+        grid.set({ x, y }, { type: 'number', value: mines, clicked: false, flagged: false, id });
     }
 
     return grid;

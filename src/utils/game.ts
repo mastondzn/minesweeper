@@ -1,5 +1,5 @@
 import { type SnapshotFromStore, createStoreWithProducer } from '@xstate/store';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import { produce } from 'immer';
 
 import type { Cell, MinesweeperActions, MinesweeperState } from './types';

@@ -19,7 +19,6 @@ function getFocusedCell(): Coordinates | null {
 let lastFocusedCell: Coordinates | null = null;
 
 function focus({ x, y }: Coordinates) {
-    // eslint-disable-next-line unicorn/prefer-query-selector
     const cell = document.getElementById(`${x},${y}`);
     if (cell) {
         lastFocusedCell = { x, y };
@@ -58,7 +57,7 @@ export function useKeyboardNavigation() {
             }[key]();
 
             const index = ['ArrowUp', 'ArrowLeft'].includes(key)
-                ? cells.reverse().findIndex((cell) => isFocusable(cell))
+                ? cells.toReversed().findIndex((cell) => isFocusable(cell))
                 : cells.findIndex((cell) => isFocusable(cell));
 
             if (index === -1) return;
